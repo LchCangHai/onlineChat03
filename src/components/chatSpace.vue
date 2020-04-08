@@ -259,6 +259,9 @@ export default {
       // console.log(emoji)
       console.log(emoji.data)
       this.inText = this.inText + emoji.data
+      // let test = ' '
+      // test = JSON.stringify(this.inText)
+      // console.log(test)
     },
     scrollToBottom () {
       this.$nextTick(() => {

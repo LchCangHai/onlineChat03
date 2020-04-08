@@ -110,11 +110,11 @@ export default {
     }
   }
   .setInfo{
-    height: 64%;
-    width:100%;
-    background-color:#f5f6fa ;
-    border-radius: 4px;
-  }
+     height: 64%;
+     width:100%;
+     background-color:#f5f6fa ;
+     border-radius: 4px;
+   }
   .myForm{
     .tem {
       display: flex;

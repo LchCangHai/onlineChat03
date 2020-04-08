@@ -99,6 +99,12 @@ export default {
   }
 </style>
 <script>
+  function getHash() {
+    let hash
+    hash = window.location.hash
+    console.log(hash)
+    return hash
+  }
   export default {
     data() {
       return {
@@ -118,6 +124,17 @@ export default {
       toMyInfo() {
         this.activeItem = 3
         this.$router.push({ path: '/myInfo' })
+      }
+    },
+    mounted: function () {
+      let hash = getHash()
+      let that = this
+      if (hash == "#/creatRoom") {
+        that.activeItem = 1
+      } else if (hash == "#/chatSpace") {
+        that.activeItem = 2
+      } else if (hash == "#/myInfo") {
+        that.activeItem = 3
       }
     }
   }
