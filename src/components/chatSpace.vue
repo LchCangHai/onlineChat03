@@ -33,14 +33,14 @@
           class="scrollToDown"
           @scrollToDown="scrollToDown"
         ></button>
+        <div
+          class="searchPane"
+          v-show="isSearching"
+          :style="{width: toggle == true ? 'calc(75% - 58px)' : 'calc(100% - 75px)'}"
+        >
+          <input class="searchInput" v-model="searchText" />
+        </div>
         <vue-scroll ref="vs">
-          <div
-            class="searchPane"
-            v-show="isSearching"
-            :style="{width: toggle == true ? 'calc(75% - 58px)' : 'calc(100% - 75px)'}"
-          >
-            <input class="searchInput" v-model="searchText" />
-          </div>
           <div class="chatSpace">
             <div class="myChat">
               <div class="chatText">
@@ -361,7 +361,7 @@ export default {
   background-color: #fff;
   border: 1px solid #f5f6fa;
   border-radius: 20px;
-  z-index: 2020;
+  z-index: 2021;
   position: absolute;
   top: 45px;
   .tem;
@@ -392,6 +392,7 @@ export default {
   // width: calc(100% - 75px);
   background-color: #fff;
   border-bottom: 0.5px solid #f5f6fa;
+  z-index: 2020;
   display: flex;
   justify-content: center;
   align-items: center;

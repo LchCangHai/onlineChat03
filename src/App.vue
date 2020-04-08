@@ -99,6 +99,7 @@ export default {
   }
 </style>
 <script>
+  let vm
   function getHash() {
     let hash
     hash = window.location.hash
@@ -106,6 +107,7 @@ export default {
     return hash
   }
   export default {
+    name: 'app',
     data() {
       return {
         isCollapse: true,
@@ -126,6 +128,22 @@ export default {
         this.$router.push({ path: '/myInfo' })
       }
     },
+    watch: {
+      $route: {
+        handler: (val, oldVal) => {
+          let hash = ' '
+          hash = val.path
+          if (hash == "/creatRoom") {
+            vm.activeItem = 1
+          } else if (hash == "/chatSpace") {
+            vm.activeItem = 2
+          } else if (hash == "/Info") {
+            vm.activeItem = 3
+          }
+        },
+        deep: true
+      }
+    },
     mounted: function () {
       let hash = getHash()
       let that = this
@@ -133,9 +151,10 @@ export default {
         that.activeItem = 1
       } else if (hash == "#/chatSpace") {
         that.activeItem = 2
-      } else if (hash == "#/myInfo") {
+      } else if (hash == "#/Info") {
         that.activeItem = 3
       }
+      vm = this
     }
   }
 </script>

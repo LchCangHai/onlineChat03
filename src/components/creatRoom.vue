@@ -260,7 +260,7 @@ export default {
         height: 40px;
         width: 40px;
         border-radius: 50%;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
         background-color: #0176ff;
         cursor: pointer;
         span {
@@ -282,6 +282,7 @@ export default {
     }
   }
   .confirm{
+    cursor: pointer;
     background-color: #0176ff;
     color: white;
     width:70%;

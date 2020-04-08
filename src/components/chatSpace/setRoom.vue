@@ -13,27 +13,55 @@
       <div class="setInfo">
         <div class="myForm">
           <div class="Photo item">
+            <input type="file"
+                   ref="uploadAvatar_btn"
+                   class="none"
+                   @change="handelFileChange"/>
             <span class="title">Photo</span>
-            <div class="formElement">
-              <div class="icon1">
-                <span class="iconfont icon-photo2"></span>
+            <div class="formElement"
+                 id="drag_box"
+                 ref="dropbox"
+                 :class="{borderhover: borderhover}">
+              <div class="icon1"
+                   @click="clickUpload"
+                   id="icon1">
+                <img class="obj"
+                     id="obj"
+                     v-show="isUpload"
+                >
+                <span class="iconfont icon-photo2"
+                      v-show="!isUpload"
+                ></span>
               </div>
-              <div class="tip1">
+              <div class="tip1"
+                   @click="clickUpload">
                 You can upload jig, gif or png files. Max file size 3mb.
               </div>
             </div>
           </div>
           <div class="Name item">
             <span class="title">Name</span>
-            <div class="formElement"></div>
+            <div class="formElement">
+              <input class="inputName inForm"
+                     placeholder="Group Name"
+                     v-model="name"
+              /></div>
           </div>
           <div class="Topic item">
             <span class="title">Topic(optional)</span>
-            <div class="formElement"></div>
+            <div class="formElement">
+              <input class="inputTopic inForm"
+                     placeholder="Group Topic"
+                     v-model="topic"
+              /></div>
           </div>
           <div class="Describe item">
             <span class="title">Describe</span>
-            <div class="formElement"></div>
+            <div class="formElement">
+              <input class="inputDescribe inForm"
+                     placeholder="Group Describe"
+                     v-model="describe"
+              /></div>
           </div>
           <div class="item">
             <button type="button" class="confirm">确认修改</button>
@@ -47,22 +75,90 @@
 </template>
 
 <script>
+document.body.ondrop = function (event) {
+  event.preventDefault()
+  event.stopPropagation()
+}
+const tformdata = new FormData()
 export default {
   data () {
     return {
       labelPosition: 'right',
-      formLabelAlign: {
-        photo: '',
-        name: '',
-        type: '',
-        describe: ''
-      }
+      formdata: tformdata,
+      borderhover: false,
+      isUpload: false,
+      search: '',
+      file: '',
+      name: '',
+      topic: '',
+      describe: ''
     }
   },
   methods: {
-
+    clickUpload () {
+      this.$refs.uploadAvatar_btn.click()
+    },
+    enentDrop: function (e) {
+      this.borderhover = false
+      e.stopPropagation()
+      e.preventDefault()
+      const fileData = e.dataTransfer.files
+      // console.log(fileData)
+      this.uploadFile(fileData)
+    },
+    uploadFile: function (files) {
+      if (files.length !== 1) {
+        console.log('数量错误')
+      } else {
+        const file = files[0]
+        this.file = file
+        const img = document.getElementById('obj')
+        img.src = window.URL.createObjectURL(file)
+        img.onload = function () {
+          window.URL.revokeObjectURL(this.src)
+        }
+        this.isUpload = true
+        this.formdata = new FormData()
+        this.formdata.set('avatar', file)
+      }
+    },
+    handelFileChange () {
+      const inputDOM = this.$refs.uploadAvatar_btn
+      const files = inputDOM.files
+      this.uploadFile(files)
+    }
+  },
+  mounted: function () {
+    const that = this
+    const dropbox = document.getElementById('drag_box')
+    dropbox.addEventListener('drop', this.enentDrop, false)
+    dropbox.addEventListener('dragleave', function (e) {
+      e.stopPropagation()
+      e.preventDefault()
+      that.borderhover = false
+    })
+    dropbox.addEventListener('dragenter', function (e) {
+      e.stopPropagation()
+      e.preventDefault()
+      that.borderhover = true
+    })
+    dropbox.addEventListener('dragover', function (e) {
+      e.stopPropagation()
+      e.preventDefault()
+      that.borderhover = true
+    })
+  },
+  watch: {
+    name (val) {
+      this.formdata.set('name', val)
+    },
+    topic (val) {
+      this.formdata.set('topic', val)
+    },
+    describe (val) {
+      this.formdata.set('describe', val)
+    }
   }
-
 }
 </script>
 
@@ -72,6 +168,9 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  .none{
+    display: none;
   }
   .container{
     width: 100%;
@@ -133,10 +232,25 @@ export default {
       height: 45px;
     }
   }
+  .inForm{
+    outline: none;
+    border: none;
+    width: 85%;
+    height: 100%;
+    background-color: #edeef6;
+  }
+  .title{
+    align-self: flex-start;
+    padding:10px 0;
+    font-size: 13px;
+    color: grey;
+  }
   .Photo{
     .formElement{
       height: 90px;
       .icon1{
+        .tem;
+        cursor: pointer;
         height: 30px;
         width: 30px;
         border-radius: 50%;
@@ -144,13 +258,14 @@ export default {
         background-color: #0176ff;
         span {
           position: relative;
-          left:7px;
-          top:4px;
+          /*left:7px;*/
+          /*top:4px;*/
           border-radius: 50%;
           color:white;
         }
       }
       .tip1{
+        cursor: pointer;
         color:#c8ccd4;
         font-size:10px;
         text-align: center;
@@ -172,6 +287,7 @@ export default {
     font-size: 13px;
   }
   .confirm{
+    cursor: pointer;
     background-color: #0176ff;
     color: white;
     width:70%;
@@ -182,5 +298,13 @@ export default {
     font-size:15px;
     margin-top:10px;
     margin-bottom:20px;
+  }
+  .borderhover{
+    border:1px dotted grey;
+  }
+  img.obj {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
   }
 </style>
