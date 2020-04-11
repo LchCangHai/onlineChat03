@@ -1,29 +1,33 @@
 <template>
   <div class="container">
-    <div class="info">
-      <div class="reinfo">
-        <div class="avatar">
-          <img src="../../assets/image/6.png">
+    <vue-scroll>
+      <div class="totle">
+        <div class="info">
+          <div class="reinfo">
+            <div class="avatar">
+              <img src="../../assets/image/6.png">
+            </div>
+            <div class="briefIntro">
+              <div class="title">mennannvzhuang</div>
+              <div class="link">zheshiyigelianjgfgsgfdggfsgs</div>
+            </div>
+          </div>
+          <div class="intro">zhelishijieshao这里是介绍zhelishijieshao这里是介绍zhelishijieshao这里是介绍</div>
         </div>
-        <div class="briefIntro">
-          <div class="title">mennannvzhuang</div>
-          <div class="link">zheshiyigelianjgfgsgfdggfsgs</div>
+        <div class="qshare">
+          <div class="select">
+            <div class="item">
+              <div>QQ</div>
+              <span class="iconfont icon-icon_qq_fill"></span>
+            </div>
+            <div class="item">
+              <div>WeChat</div>
+              <span class="iconfont icon-icon_wechat"></span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="intro">zhelishijieshao这里是介绍zhelishijieshao这里是介绍zhelishijieshao这里是介绍</div>
-    </div>
-    <div class="qshare">
-      <div class="select">
-        <div class="item">
-          <div>QQ</div>
-          <span class="iconfont icon-icon_qq_fill"></span>
-        </div>
-        <div class="item">
-          <div>WeChat</div>
-          <span class="iconfont icon-icon_wechat"></span>
-        </div>
-      </div>
-    </div>
+    </vue-scroll>
   </div>
 </template>
 
@@ -38,6 +42,11 @@
     align-items: center;
   }
   .container{
+    .tem;
+    width:100%;
+    height:100%;
+  }
+  .totle{
     .tem;
     width:100%;
     height:100%;
@@ -69,6 +78,7 @@
     position: relative;
     top: -10px;
     margin: 5px;
+    /*max-width: 250px;*/
     word-break: break-all;
     .title{
       font-size: 15px;
@@ -85,6 +95,7 @@
     margin: 0 13px;
     text-align: center;
     font-style: normal;
+    max-width: 200px;
   }
   .qshare{
     width:100%;

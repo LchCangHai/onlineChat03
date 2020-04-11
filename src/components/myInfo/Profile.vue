@@ -15,10 +15,13 @@
           <div class="intro">i am damennan ohadsguagjhguenvfuaehfaefajsidfuaefe</div>
         </div>
         <div class="pane">
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
+<!--          <div class="item">-->
+<!--            <div class="info1">-->
+<!--              <div class="title2">Conntry</div>-->
+<!--              <div class="content2">FuZhou FuJian</div>-->
+<!--            </div>-->
+<!--            <i class="el-icon-search"></i>-->
+<!--          </div>-->
           <div class="item">
             <div class="title2">Conntry</div>
             <div class="content2">FuZhou FuJian</div>
@@ -143,7 +146,7 @@ export default {
     .tem;
     border-radius: 5px;
     width:90%;
-    height:200px;
+    /*height:200px;*/
     background-color: #ffffff;
     margin:10px 0;
   }
@@ -213,5 +216,11 @@ export default {
       margin: 3px 0;
     }
   }
+  /*.info1{*/
+  /*  display: flex;*/
+  /*  flex-direction: column;*/
+  /*  justify-content: center;*/
+  /*  align-items: flex-start;*/
+  /*}*/
 
 </style>

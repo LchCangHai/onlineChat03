@@ -58,7 +58,7 @@
           <div class="Describe item">
             <span class="title">Describe</span>
             <div class="formElement">
-              <input class="inputDescribe inForm"
+              <textarea class="inputDescribe inForm"
                      placeholder="Group Describe"
                      v-model="describe"
               /></div>
@@ -181,6 +181,7 @@ export default {
     .tem;
     height:33%;
     text-align: center;
+    margin: 25px 0;
     .avatar{
        height: 75px;
        width: 75px;
@@ -306,5 +307,10 @@ export default {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+  }
+  textarea{
+    resize: none;
+    font-weight: 500;
+    font-size: 15px;
   }
 </style>

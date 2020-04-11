@@ -31,14 +31,20 @@
         <button
           type="button"
           class="scrollToDown"
-          @scrollToDown="scrollToDown"
+          ref="toDown"
+          @click="scrollToDown"
         ></button>
         <div
           class="searchPane"
           v-show="isSearching"
           :style="{width: toggle == true ? 'calc(75% - 58px)' : 'calc(100% - 75px)'}"
         >
-          <input class="searchInput" v-model="searchText" />
+          <div class="searchContainer">
+            <input class="searchInput"
+                   placeholder="Search this chat"
+                   v-model="searchText" />
+            <i class="el-icon-search"></i>
+          </div>
         </div>
         <vue-scroll ref="vs">
           <div class="chatSpace">
@@ -198,7 +204,7 @@ export default {
       isEmoji: false,
       avatarURL: require('../assets/image/vue.png'),
       myText: ' ',
-      searchText: 'Search this chat',
+      searchText: '',
       inText: '',
       emojiRight: {
         right: '260px'
@@ -270,7 +276,7 @@ export default {
       })
     },
     scrollToDown () {
-      alert(1)
+      // alert(1)
       const con = {
         y: '100%'
       }
@@ -278,7 +284,8 @@ export default {
     }
   },
   mounted () {
-    this.$emit('scrollToDown')
+    // this.$emit('scrollToDown')
+    this.$refs.toDown.click()
   },
   components: {
     VEmojiPicker
@@ -396,16 +403,31 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  input {
+}
+.searchContainer{
+  .tem;
+  flex-direction: row;
+  justify-content: space-around;
+  border: 0.5px solid #f5f6fa;
+  border-radius: 4px;
+  width: 80%;
+  height: 40px;
+  // padding: 0 10px;
+  background-color: #edeef6;
+  /*color: #b6bac2;*/
+  i{
+    cursor: pointer;
+  }
+}
+.searchInput{
     outline: none;
-    border: 0.5px solid #f5f6fa;
+    border: none;
     border-radius: 4px;
-    width: 80%;
-    height: 40px;
+    width: 90%;
+    height: 100%;
     // padding: 0 10px;
     background-color: #edeef6;
-    color: #b6bac2;
-  }
+    color: #757575;
 }
 .vue-scroll{
   height:100%;
