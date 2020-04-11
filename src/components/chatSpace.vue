@@ -195,9 +195,20 @@ import VEmojiPicker from 'v-emoji-picker'
 // const container = document.querySelector(' .body ')
 // container.scrollTop = container.scrollHeight
 // import packData from 'v-emoji-picker/data/emojis.json'
+const wsURL = 'wss://echo.websocket.org'
 export default {
   data () {
     return {
+      wsParams: {
+        ws: '',
+        lockReconnect: false,
+        tt: ''
+      },
+      heartCheck: {
+        timeOut: 5000,
+        timeOutObj: null,
+        serverTimeOutObj: null
+      },
       toggle: false,
       isSetInfo: false,
       isSearching: false,
@@ -281,11 +292,80 @@ export default {
         y: '100%'
       }
       this.$refs.vs.scrollTo(con, 2)
+    },
+    createWs () {
+      const that = this
+      try {
+        that.wsParams.ws = new WebSocket(wsURL)
+        console.log('create ws success')
+        that.initWS()
+      } catch (e) {
+        console.log('catchErrorInCreateWebScoket:')
+        console.log(e)
+        that.reconnect(wsURL)
+      }
+    },
+    initWS () {
+      console.log('initWebScoket')
+      this.wsParams.ws.onclose = this.wsClose
+      this.wsParams.ws.onerror = this.wsError
+      this.wsParams.ws.onopen = this.wsOpen
+      this.wsParams.ws.onmessage = this.wsMessage
+    },
+    reconnect (url) {
+      const that = this
+      if (that.wsParams.lockReconnect) {
+        return
+      }
+      that.wsParams.lockReconnect = true
+      that.wsParams.tt && clearTimeout(that.wsParams.tt)
+      that.wsParams.tt = setTimeout(function () {
+        that.createWs(url)
+        that.wsParams.lockReconnect = false
+      }, 5000)
+      // console.log(2)
+    },
+    wsClose (e) {
+      console.log('断开连接', e)
+    },
+    wsError () {
+      console.log('ws出现错误')
+      this.initWS()
+    },
+    wsOpen () {
+      this.start()
+      let actions = { test: '12345' }
+      actions = { test: '123456' }
+      this.wsSend(JSON.stringify(actions))
+    },
+    wsMessage (e) {
+      this.start()
+      console.log(e)
+    },
+    wsSend (Data) {
+      this.wsParams.ws.send(Data)
+    },
+    start () {
+      console.log('心跳包开始啦')
+      const that = this
+      this.heartCheck.timeOutObj && clearTimeout(this.heartCheck.timeOutObj)
+      this.heartCheck.serverTimeOutObj && clearTimeout(this.heartCheck.serverTimeOutObj)
+      this.heartCheck.timeOutObj = setTimeout(function () {
+        // 发送心跳数据包
+        that.wsSend('12345')
+        that.heartCheck.serverTimeOutObj = setTimeout(function () {
+          console.log(111)
+          console.log(that.wsParams.ws)
+          that.wsClose()
+        }, that.heartCheck.timeOut)
+      }, that.heartCheck.timeOut)
     }
   },
   mounted () {
     // this.$emit('scrollToDown')
     this.$refs.toDown.click()
+    // this.createWs()
+    console.log(123)
   },
   components: {
     VEmojiPicker
