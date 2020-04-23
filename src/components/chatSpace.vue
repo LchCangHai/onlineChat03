@@ -34,6 +34,12 @@
           ref="toDown"
           @click="scrollToDown"
         ></button>
+        <button
+          @click="scrollToDown"
+        >
+          <i class="el-icon-bottom"></i>
+          查看信息
+        </button>
         <div
           class="searchPane"
           v-show="isSearching"
@@ -280,18 +286,21 @@ export default {
       // test = JSON.stringify(this.inText)
       // console.log(test)
     },
-    scrollToBottom () {
-      this.$nextTick(() => {
-        const container = document.querySelector(' .body ')
-        container.scrollTop = container.scrollHeight
-      })
-    },
+    // scrollToBottom () {
+    //   this.$nextTick(() => {
+    //     const container = document.querySelector(' .body ')
+    //     container.scrollTop = container.scrollHeight
+    //   })
+    // },
     scrollToDown () {
       // alert(1)
+      // const { scrollTop, scrollLeft } = this.$refs.vs.getPosition()
+      // console.loo(scrollTop, scrollLeft)
+      // console.log('scrolldown')
       const con = {
         y: '100%'
       }
-      this.$refs.vs.scrollTo(con, 2)
+      this.$refs.vs.scrollTo(con, 500)
     },
     createWs () {
       const that = this

@@ -5,15 +5,15 @@
         <div class="title">
           Creat group
         </div>
-        <div class="search">
-          <div>
-            <input class="search1"
-                   placeholder="Search for messages or users..."
-                    v-model="search"
-            >
-            <i class="el-icon-search"></i>
-          </div>
-        </div>
+<!--        <div class="search">-->
+<!--          <div>-->
+<!--            <input class="search1"-->
+<!--                   placeholder="Search for messages or users..."-->
+<!--                    v-model="search"-->
+<!--            >-->
+<!--            <i class="el-icon-search"></i>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="creatForm">
           <div class="Photo item ">
             <input type="file"
