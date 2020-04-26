@@ -8,37 +8,70 @@ import Share from '../components/chatSpace/share.vue'
 import setRoom from '../components/chatSpace/setRoom.vue'
 import profile from '../components/myInfo/Profile.vue'
 import set from '../components/myInfo/set.vue'
+import home from '../components/home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', redirect: '/chatSpace' },
+  { path: '/home', redirect: '/home/chatSpace' },
   {
-    path: '/chatSpace',
-    component: chatSpace,
-    children: [
-      { path: '/share', component: Share },
-      { path: '/setRoom', component: setRoom }
-    ]
-  },
-  {
-    path: '/creatRoom',
-    component: creatRoom
-  },
-  {
-    path: '/myInfo',
-    redirect: '/Info',
-    component: myInfo,
+    path: '/home',
+    component: home,
     children: [
       {
-        path: '/Info',
-        components: {
-          profile: profile,
-          settings: set
-        }
+        path: 'chatSpace',
+        component: chatSpace,
+        children: [
+          { path: 'share', component: Share },
+          { path: 'setRoom', component: setRoom }
+        ]
+      },
+      {
+        path: 'creatRoom',
+        component: creatRoom
+      },
+      {
+        path: 'myInfo',
+        redirect: 'Info',
+        component: myInfo,
+        children: [
+          {
+            path: 'Info',
+            components: {
+              profile: profile,
+              settings: set
+            }
+          }
+        ]
       }
     ]
   }
+  // {
+  //   path: '/chatSpace',
+  //   component: chatSpace,
+  //   children: [
+  //     { path: '/share', component: Share },
+  //     { path: '/setRoom', component: setRoom }
+  //   ]
+  // },
+  // {
+  //   path: '/creatRoom',
+  //   component: creatRoom
+  // },
+  // {
+  //   path: '/myInfo',
+  //   redirect: '/Info',
+  //   component: myInfo,
+  //   children: [
+  //     {
+  //       path: '/Info',
+  //       components: {
+  //         profile: profile,
+  //         settings: set
+  //       }
+  //     }
+  //   ]
+  // }
 ]
 
 const router = new VueRouter({

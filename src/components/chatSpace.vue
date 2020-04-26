@@ -245,14 +245,14 @@ export default {
     },
     invite () {
       this.toggle = true
-      this.$router.push({ path: '/share' })
+      this.$router.push({ path: '/home/chatSpace/share' })
       this.emojiRight.left = '70px'
       delete this.emojiRight.right
     },
     mute () {
       this.toggle = true
       this.isSetInfo = false
-      this.$router.push({ path: '/setRoom' })
+      this.$router.push({ path: '/home/chatSpace/setRoom' })
       this.emojiRight.left = '70px'
       delete this.emojiRight.right
     },
@@ -268,7 +268,7 @@ export default {
     },
     closeAside () {
       this.toggle = false
-      this.$router.push({ path: '/chatSpace' })
+      this.$router.push({ path: '/home/chatSpace' })
       delete this.emojiRight.left
       this.emojiRight.right = '260px'
     },

@@ -105,8 +105,29 @@
 export default {
   data () {
     return {
-      name: ''
+      name: '',
+      data: ''
     }
+  },
+  methods: {
+    getData () {
+      console.log('getData')
+      this.$axios({
+        method: 'get',
+        url: '/api/v1/user'
+      })
+        .then(function (ret) {
+          console.log('ret')
+          alert('出来了')
+        })
+        .catch(function () {
+          console.log('error')
+        })
+    }
+  },
+  mounted () {
+    // alert('getData()')
+    this.getData()
   }
 }
 </script>
