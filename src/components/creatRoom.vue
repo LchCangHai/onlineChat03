@@ -5,9 +5,6 @@
         <div class="title">
           Creat group
         </div>
-        <el-button
-          @click="getRoom"
-        >getRoom</el-button>
 <!--        <div class="search">-->
 <!--          <div>-->
 <!--            <input class="search1"-->

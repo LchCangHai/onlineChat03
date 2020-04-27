@@ -210,11 +210,12 @@ export default {
         handler: (val, oldVal) => {
           let hash = ' '
           hash = val.path
-          if (hash == "/creatRoom") {
+          if (hash == "/home/creatRoom") {
             vm.activeItem = 1
-          } else if (hash == "/chatSpace") {
+          } else if (hash == "/home/chatSpace" ||
+            hash == "/home/chatSpace/setRoom" || hash == "/home/chatSpace/share") {
             vm.activeItem = 2
-          } else if (hash == "/Info") {
+          } else if (hash == "/home/myInfo/Info") {
             vm.activeItem = 3
           }
         },

@@ -202,6 +202,7 @@ import VEmojiPicker from 'v-emoji-picker'
 // container.scrollTop = container.scrollHeight
 // import packData from 'v-emoji-picker/data/emojis.json'
 const wsURL = 'wss://echo.websocket.org'
+let vm
 export default {
   data () {
     return {
@@ -370,11 +371,34 @@ export default {
       }, that.heartCheck.timeOut)
     }
   },
+  watch: {
+    $route: {
+      handler: (val, oldVal) => {
+        let hash = ' '
+        hash = val.path
+        if (hash === '/home/chatSpace/setRoom') {
+          vm.toggle = true
+        } else if (hash === '/home/chatSpace') {
+          vm.toggle = false
+        } else if (hash === '/home/chatSpace/share') {
+          vm.toggle = true
+        }
+      },
+      deep: true
+    }
+  },
   mounted () {
+    vm = this
     // this.$emit('scrollToDown')
     this.$refs.toDown.click()
     // this.createWs()
-    console.log(123)
+    let hash = '1'
+    hash = window.location.hash
+    if (hash === '#/home/chatSpace') {
+      vm.toggle = false
+    } else {
+      vm.toggle = true
+    }
   },
   components: {
     VEmojiPicker
@@ -427,6 +451,7 @@ export default {
     height: 45px;
     width: 45px;
     border-radius: 50%;
+    object-fit: cover;
   }
 }
 .textInfo-h {
@@ -545,6 +570,7 @@ export default {
     height: 45px;
     width: 45px;
     border-radius: 50%;
+    object-fit: cover;
   }
 }
 .myChat {

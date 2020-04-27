@@ -29,13 +29,13 @@
           <div class="intro">{{data.create_at}}</div>
         </div>
         <div class="pane">
-          <div
-            class="item"
-            v-for="item in datas.data.users"
-            :key="item.id"
-          >
+          <div class="item">
             <div class="title2">Conntry</div>
-            <div class="content2">{{item.kind}}</div>
+            <div class="content2">{{data.country}}</div>
+          </div>
+          <div class="item">
+            <div class="title2">Area</div>
+            <div class="content2">{{data.area}}</div>
           </div>
         </div>
       </div>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -83,48 +84,18 @@ export default {
     }
   },
   methods: {
-    getData () {
-      console.log('getData')
-      // this.$axios({
-      //   method: 'get',
-      //   url: '/api/v1/user'
-      // })
-      //   .then(function (ret) {
-      //     console.log('ret')
-      //     alert('出来了')
-      //   })
-      //   .catch(function () {
-      //     console.log('error')
-      //   })
-      this.$axios.get('/api/v1/user')
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
-    try01 () {
-      console.log('try01')
-      this.$axios.get('/api/v1/users?room=room_id')
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
+    ...mapMutations(['setRoomID', 'setRooms']),
     getUsers () {
       const that = this
       console.log('getUsers')
       this.$axios.get('/api/v1/users', {
         params: {
-          room: '1'
+          room: that.currentRoomID.id
         }
       })
         .then(res => {
           console.log(res)
-          that.datas1 = res.data
+          that.datas = res.data
           console.log('获取列表成功')
         }).catch(error => {
           console.log(error)
@@ -134,6 +105,9 @@ export default {
       const that = this
       console.log('搜索用户名：' + that.searchContent)
     }
+  },
+  computed: {
+    ...mapState(['currentRoomID', 'rooms'])
   },
   mounted () {
     console.log('获取用户列表')
@@ -214,6 +188,7 @@ export default {
       height: 75px;
       width: 75px;
       border-radius: 50%;
+      object-fit: cover;
     }
   }
   .title{

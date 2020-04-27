@@ -70,6 +70,20 @@
 <!--                >进入</button>-->
 <!--              </div>-->
               <div class="list">
+                <div
+                  class="item1"
+                  v-for="item in myRooms"
+                  :key="item.id"
+                >
+                  <div>{{item.name}}</div>
+                  <div>
+                    <button
+                      type="button"
+                      class="enter"
+                      @click="enterRoom(item)"
+                    >进入</button>
+                  </div>
+                </div>
                 <div class="item1">
                   <div>一号房间 </div>
                   <div>
@@ -265,6 +279,7 @@ export default {
     console.log(hash)
     return hash
   }
+  import { mapState,mapMutations } from 'vuex'
   export default {
     name: 'app',
     data() {
@@ -273,10 +288,12 @@ export default {
         activeNum: 2,
         inviteCode: '',
         tip1: '',
-        myRoom: ''
+        myRoom: '',
+        myRooms: []
       }
     },
     methods: {
+      ...mapMutations(['setRoomID','setRooms']),
       tocreate() {
         // console.log(12)
         this.activeNum = 1
@@ -305,7 +322,33 @@ export default {
           }).catch(error=>{
             console.log(error)
         })
+      },
+      getMyRooms () {
+        const that = this
+        console.log('getUser')
+        this.$axios({
+          method: 'get',
+          url: '/api/v1/user'
+        })
+          .then(res => {
+            console.log(res)
+            that.myRooms = res.data.data.rooms
+            that.rooms = res.data.data.rooms
+            window.localStorage.setItem('currentUser', res.data.data.id)
+          }).catch(error => {
+          console.log(error)
+        })
+      },
+      enterRoom (item) {
+        console.log(item)
+        this.myRoom = item
+        console.log('进入房间' + item.name)
+        window.localStorage.setItem('currentRoom', item.id)
+        this.$router.push({ path: '/home' })
       }
+    },
+    computed: {
+      ...mapState(['currentRoomID','rooms'])
     },
     watch: {
       // activeNum: {
@@ -330,10 +373,17 @@ export default {
         },
         deep: true,
         immediate: true
+      },
+      myRoom (val) {
+        this.setRoomID(val)
+      },
+      myRooms (val) {
+        this.setRooms(val)
       }
     },
     mounted: function () {
       let that = this
+      this.getMyRooms()
       const mytoken = window.localStorage.getItem('token')
       if (mytoken == null) {
         that.getToken()

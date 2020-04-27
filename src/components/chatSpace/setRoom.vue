@@ -3,11 +3,11 @@
     <vue-scroll>
       <div class="showInfo">
         <div class="avatar">
-          <img src="../../assets/image/6.png">
+          <img :src="avatar">
         </div>
         <div class="info">
-          <div class="name">mennanqun</div>
-          <div class="intro">mengnannzhuangxiu哈哈哈哈哈哈哈哈</div>
+          <div class="name">{{name}}</div>
+          <div class="intro">{{describe}}</div>
         </div>
       </div>
       <div class="setInfo">
@@ -28,6 +28,7 @@
                 <img class="obj"
                      id="obj"
                      v-show="isUpload"
+                     :src="avatar"
                 >
                 <span class="iconfont icon-photo2"
                       v-show="!isUpload"
@@ -63,8 +64,20 @@
                      v-model="describe"
               /></div>
           </div>
+          <div class="Password item">
+            <span class="title">Password(invite)</span>
+            <div class="formElement">
+              <input class="inputPassword inForm"
+                     placeholder="Group Password"
+                     v-model="password"
+              /></div>
+          </div>
           <div class="item">
-            <button type="button" class="confirm">确认修改</button>
+            <button
+              type="button"
+              class="confirm"
+              @click="btnSubmit"
+            >确认修改</button>
             <!--          <el-button type="primary">主要按钮</el-button>-->
           </div>
         </div>
@@ -87,11 +100,13 @@ export default {
       formdata: tformdata,
       borderhover: false,
       isUpload: false,
+      avatar: '',
       search: '',
       file: '',
       name: '',
       topic: '',
-      describe: ''
+      describe: '',
+      password: ''
     }
   },
   methods: {
@@ -126,10 +141,61 @@ export default {
       const inputDOM = this.$refs.uploadAvatar_btn
       const files = inputDOM.files
       this.uploadFile(files)
+    },
+    getRoomInfo () {
+      const that = this
+      console.log('getRoomInfo')
+      this.$axios.get('/api/v1/room/' + window.localStorage.getItem('currentRoom'))
+        .then(res => {
+          console.log(res)
+          that.avatar = res.data.data.avatar
+          that.name = res.data.data.name
+          that.topic = res.data.data.topic
+          that.describe = res.data.data.introduce
+          that.password = res.data.data.key
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    modifyRoom () {
+      const that = this
+      console.log('modifyRoom')
+      this.$axios({
+        method: 'put',
+        url: '/api/v1/room' + window.localStorage.getItem('currentRoom'),
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: that.formdata
+      })
+        .then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    modifyRoomAvatar () {
+      const that = this
+      console.log('modifyUserRoom')
+      this.$axios({
+        method: 'post',
+        url: '/avatars/room/' + window.localStorage.getItem('currentRoom'),
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: that.formdata
+      })
+        .then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    btnSubmit () {
+      console.log('submitModifyRoom')
+      this.modifyRoom()
+      this.modifyRoomAvatar()
     }
   },
   mounted: function () {
     const that = this
+    this.getRoomInfo()
     const dropbox = document.getElementById('drag_box')
     dropbox.addEventListener('drop', this.enentDrop, false)
     dropbox.addEventListener('dragleave', function (e) {
@@ -156,7 +222,10 @@ export default {
       this.formdata.set('topic', val)
     },
     describe (val) {
-      this.formdata.set('describe', val)
+      this.formdata.set('introduce', val)
+    },
+    password (val) {
+      this.formdata.set('key', val)
     }
   }
 }
@@ -192,6 +261,7 @@ export default {
          height: 75px;
          width: 75px;
          border-radius: 50%;
+         object-fit: cover;
        }
      }
     .info{
@@ -307,6 +377,7 @@ export default {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    object-fit: cover;
   }
   textarea{
     resize: none;
