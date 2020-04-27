@@ -3,99 +3,42 @@
     <div class="container">
       <div class="title1">Profile</div>
       <div class="search">
-        <input class="inSearch" placeholder="Search for message or username...">
-        <i class="el-icon-search"></i>
+        <input
+          class="inSearch"
+          placeholder="通过昵称进行搜索..."
+          v-model="searchContent"
+          @keyup.enter="btnSearch"
+        >
+        <i
+          class="el-icon-search"
+           @click="btnSearch"
+        ></i>
       </div>
-      <div class="member">
+      <div
+        class="member"
+        v-for="data in datas.data.users"
+        :key="data.id"
+      >
         <div class="info">
           <div class="avatar">
-            <img src="../../assets/image/6.png">
+            <img
+              :src="data.avatar"
+            >
           </div>
-          <div class="title">damennan</div>
-          <div class="intro">i am damennan ohadsguagjhguenvfuaehfaefajsidfuaefe</div>
+          <div class="title">{{data.username}}</div>
+          <div class="intro">{{data.create_at}}</div>
         </div>
         <div class="pane">
-<!--          <div class="item">-->
-<!--            <div class="info1">-->
-<!--              <div class="title2">Conntry</div>-->
-<!--              <div class="content2">FuZhou FuJian</div>-->
-<!--            </div>-->
-<!--            <i class="el-icon-search"></i>-->
-<!--          </div>-->
-          <div class="item">
+          <div
+            class="item"
+            v-for="item in datas.data.users"
+            :key="item.id"
+          >
             <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-        </div>
-        <div class="info">
-          <div class="avatar">
-            <img src="../../assets/image/6.png">
-          </div>
-          <div class="title">damennan</div>
-          <div class="intro">i am damennan ohadsguagjhguenvfuaehfaefajsidfuaefe</div>
-        </div>
-        <div class="pane">
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-        </div>
-        <div class="info">
-          <div class="avatar">
-            <img src="../../assets/image/6.png">
-          </div>
-          <div class="title">damennan</div>
-          <div class="intro">i am damennan ohadsguagjhguenvfuaehfaefajsidfuaefe</div>
-        </div>
-        <div class="pane">
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-        </div>
-        <div class="info">
-          <div class="avatar">
-            <img src="../../assets/image/6.png">
-          </div>
-          <div class="title">damennan</div>
-          <div class="intro">i am damennan ohadsguagjhguenvfuaehfaefajsidfuaefe</div>
-        </div>
-        <div class="pane">
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
-          </div>
-          <div class="item">
-            <div class="title2">Conntry</div>
-            <div class="content2">FuZhou FuJian</div>
+            <div class="content2">{{item.kind}}</div>
           </div>
         </div>
       </div>
-
     </div>
   </vue-scroll>
 
@@ -106,28 +49,95 @@ export default {
   data () {
     return {
       name: '',
-      data: ''
+      datas: {
+        data: {
+          count: 1, // # 用户数据个数(即users中的用户个数)
+          kind: 'UserList', // # 资源类型
+          self: 'http://chatroom.mr-lin.site/api/v1/users/?room=1', // # 该资源请求链接
+          users: [ // # 用户信息
+            {
+              avatar: 'http://chatroom.mr-lin.site/avatars/user/25',
+              create_at: '2020-04-25 11:45:36.129983',
+              id: 25,
+              kind: 'user_all',
+              self: 'http://chatroom.mr-lin.site/api/v1/user/',
+              update_at: '2020-04-25 11:45:36.129983',
+              username: '3927'
+            },
+            {
+              avatar: 'http://chatroom.mr-lin.site/avatars/user/9',
+              create_at: '2020-04-26 11:45:36.222222',
+              id: 25,
+              kind: 'User',
+              self: 'http://chatroom.mr-lin.site/api/v1/user/',
+              update_at: '2020-04-25 11:45:36.129983',
+              username: 'damennan'
+            }
+          ]
+        },
+        message: 'succeed',
+        status: 200
+      },
+      datas1: '',
+      searchContent: ''
     }
   },
   methods: {
     getData () {
       console.log('getData')
-      this.$axios({
-        method: 'get',
-        url: '/api/v1/user'
+      // this.$axios({
+      //   method: 'get',
+      //   url: '/api/v1/user'
+      // })
+      //   .then(function (ret) {
+      //     console.log('ret')
+      //     alert('出来了')
+      //   })
+      //   .catch(function () {
+      //     console.log('error')
+      //   })
+      this.$axios.get('/api/v1/user')
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    try01 () {
+      console.log('try01')
+      this.$axios.get('/api/v1/users?room=room_id')
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    getUsers () {
+      const that = this
+      console.log('getUsers')
+      this.$axios.get('/api/v1/users', {
+        params: {
+          room: '1'
+        }
       })
-        .then(function (ret) {
-          console.log('ret')
-          alert('出来了')
+        .then(res => {
+          console.log(res)
+          that.datas1 = res.data
+          console.log('获取列表成功')
+        }).catch(error => {
+          console.log(error)
         })
-        .catch(function () {
-          console.log('error')
-        })
+    },
+    btnSearch () {
+      const that = this
+      console.log('搜索用户名：' + that.searchContent)
     }
   },
   mounted () {
-    // alert('getData()')
-    this.getData()
+    console.log('获取用户列表')
+    this.getUsers()
   }
 }
 </script>
@@ -158,6 +168,9 @@ export default {
     height:45px;
     background-color: #edeef6;
     margin:10px 0;
+    i{
+      cursor: pointer;
+    }
   }
   .member{
     .tem;
@@ -170,6 +183,7 @@ export default {
     /*height:200px;*/
     background-color: #ffffff;
     margin:10px 0;
+    padding: 10px 0;
   }
   .pane{
     border-radius: 5px;

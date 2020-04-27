@@ -14,6 +14,11 @@ import store from './store'
 
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = '/foo'
+// axios.defaults.withCredentials = true
+axios.interceptors.request.use(config => {
+  config.headers.token = window.localStorage.getItem('token')
+  return config
+})
 
 // const options = { path: '/my-app/' } // Options object to pass into SocketIO
 // Vue.use(new VueSocketIO({

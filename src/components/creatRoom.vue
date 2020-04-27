@@ -5,6 +5,9 @@
         <div class="title">
           Creat group
         </div>
+        <el-button
+          @click="getRoom"
+        >getRoom</el-button>
 <!--        <div class="search">-->
 <!--          <div>-->
 <!--            <input class="search1"-->
@@ -54,7 +57,7 @@
           <div class="Phone item">
             <span class="title2">Topic(optional)</span>
             <div class="formElement">
-              <input class="inputTopic inForm"
+              <input class="inputPhone inForm"
                      placeholder="Group Topic"
                      v-model="topic"
               />
@@ -69,8 +72,21 @@
               />
             </div>
           </div>
+          <div class="Password item">
+            <span class="title2">Password</span>
+            <div class="formElement">
+              <input class="inputPassword inForm"
+                     placeholder="Group Password"
+                     v-model="password"
+              />
+            </div>
+          </div>
           <div class="Confirm item">
-            <button type="button" class="confirm">Creat group</button>
+            <button
+              type="button"
+              class="confirm"
+              @click="upLoad"
+            >Creat group</button>
           </div>
         </div>
       </div>
@@ -94,7 +110,8 @@ export default {
       file: '',
       name: '',
       topic: '',
-      describe: ''
+      describe: '',
+      password: ''
     }
   },
   methods: {
@@ -129,6 +146,26 @@ export default {
       const inputDOM = this.$refs.uploadAvatar_btn
       const files = inputDOM.files
       this.uploadFile(files)
+    },
+    upLoad () {
+      console.log('upload')
+      const that = this
+      this.$axios.post('/api/v1/rooms/', that.formdata,
+        { headers: { 'Content-Type': 'multipart/form-data' } })
+        .then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    getRoom () {
+      console.log('getroom')
+      this.$axios.get('/api/v1/room/222')
+        .then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
     }
   },
   mounted: function () {
@@ -159,7 +196,10 @@ export default {
       this.formdata.set('topic', val)
     },
     describe (val) {
-      this.formdata.set('describe', val)
+      this.formdata.set('introduce', val)
+    },
+    password (val) {
+      this.formdata.set('password', val)
     }
   }
 }

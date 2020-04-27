@@ -294,6 +294,17 @@ export default {
         this.$router.push({ path: '/home' })
       },
       enter(roomID) {
+      },
+      getToken() {
+        console.log('gettoken')
+        this.$axios.post('/token')
+          .then(ref=>{
+              // console.log(ref.data)
+              window.localStorage.setItem('token',ref.data)
+              console.log('获取并保存token')
+          }).catch(error=>{
+            console.log(error)
+        })
       }
     },
     watch: {
@@ -322,8 +333,14 @@ export default {
       }
     },
     mounted: function () {
-      let hash = getHash()
       let that = this
+      const mytoken = window.localStorage.getItem('token')
+      if (mytoken == null) {
+        that.getToken()
+      } else {
+        console.log('已保存token')
+      }
+      let hash = getHash()
       if (hash == "#/") {
         that.isHome = true
       } else {
