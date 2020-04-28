@@ -73,12 +73,18 @@
               /></div>
           </div>
           <div class="item">
-            <button
-              type="button"
+<!--            <button-->
+<!--              type="button"-->
+<!--              class="confirm"-->
+<!--              @click="btnSubmit"-->
+<!--              :disabled="isMaster"-->
+<!--            >确认修改</button>-->
+            <el-button
+              type="primary"
               class="confirm"
               @click="btnSubmit"
-            >确认修改</button>
-            <!--          <el-button type="primary">主要按钮</el-button>-->
+              :disabled="isMaster"
+            >确认修改</el-button>
           </div>
         </div>
       </div>
@@ -100,13 +106,15 @@ export default {
       formdata: tformdata,
       borderhover: false,
       isUpload: false,
+      isMaster: true,
       avatar: '',
       search: '',
       file: '',
       name: '',
       topic: '',
       describe: '',
-      password: ''
+      password: '',
+      master_id: ''
     }
   },
   methods: {
@@ -153,6 +161,15 @@ export default {
           that.topic = res.data.data.topic
           that.describe = res.data.data.introduce
           that.password = res.data.data.key
+          that.master_id = res.data.data.master_id
+          if (that.master_id.toString() !== window.localStorage.getItem('currentUser').toString()) {
+            // alert(that.master_id + window.localStorage.getItem('currentUser'))
+            console.log('不是群主，不能修改信息')
+            that.isMaster = true
+          } else {
+            console.log('是群主，能修改信息')
+            that.isMaster = false
+          }
         }).catch(error => {
           console.log(error)
         })
@@ -162,7 +179,7 @@ export default {
       console.log('modifyRoom')
       this.$axios({
         method: 'put',
-        url: '/api/v1/room' + window.localStorage.getItem('currentRoom'),
+        url: '/api/v1/room/' + window.localStorage.getItem('currentRoom'),
         headers: { 'Content-Type': 'multipart/form-data' },
         data: that.formdata
       })

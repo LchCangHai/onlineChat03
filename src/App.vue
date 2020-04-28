@@ -43,6 +43,15 @@
                  v-show=" activeNum === 2 ? true : false"
             >
               <div class="title1">
+                输入房间号/id：
+              </div>
+              <div class="inCode">
+                <input
+                  placeholder="房间号/id"
+                  v-model="roomCode"
+                >
+              </div>
+              <div class="title1">
                 输入房间邀请码：
               </div>
               <div class="inCode">
@@ -51,24 +60,19 @@
                   v-model="inviteCode"
                 >
               </div>
-              <el-button type="primary">加入</el-button>
+              <el-button
+                type="primary"
+                @click="addRoom"
+              >加入</el-button>
               <div class="tip1">{{tip1}}</div>
 <!--                        <el-button type="primary" @click="login">主要按钮</el-button>-->
             </div>
             <div class="view contentItem"
                  v-show=" activeNum === 3 ? true : false"
             >
-<!--              <div-->
-<!--                class="list"-->
-<!--                v-for="item in myRoom" :key="item.id"-->
-<!--              >-->
-<!--                <div class="item1">{{item.name}}</div>-->
-<!--                <button-->
-<!--                  type="button"-->
-<!--                  class="enter"-->
-<!--                  @click="enter(item.id)"-->
-<!--                >进入</button>-->
-<!--              </div>-->
+              <div class="btnFresh"
+                   @click="getMyRooms"
+              >刷新<i class="el-icon-refresh"></i></div>
               <div class="list">
                 <div
                   class="item1"
@@ -83,16 +87,6 @@
                       @click="enterRoom(item)"
                     >进入</button>
                   </div>
-                </div>
-                <div class="item1">
-                  <div>一号房间 </div>
-                  <div>
-                    <button type="button" class="enter">进入</button>
-                  </div>
-                </div>
-                <div class="item1">
-                  <span>一号房间 </span>
-                  <button type="button" class="enter">进入</button>
                 </div>
               </div>
 <!--                        <el-button type="primary" @click="login">主要按钮</el-button>-->
@@ -267,6 +261,12 @@ export default {
     width:100%;
     /*background-color: #308fff;*/
   }
+  .btnFresh{
+    align-self: flex-end;
+    justify-self: flex-start;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
   .active{
     background-color: #edeef6;
   }
@@ -287,6 +287,7 @@ export default {
         isHome: true,
         activeNum: 2,
         inviteCode: '',
+        roomCode: '',
         tip1: '',
         myRoom: '',
         myRooms: []
@@ -345,6 +346,28 @@ export default {
         console.log('进入房间' + item.name)
         window.localStorage.setItem('currentRoom', item.id)
         this.$router.push({ path: '/home' })
+      },
+      addRoom () {
+        console.log('addRoom')
+        const that = this
+        this.$axios({
+          method: 'put',
+          url: '/api/v1/user',
+          data: {
+            action: 'join',
+            key: that.inviteCode,
+            name: that.roomCode
+          }
+        })
+        .then(res => {
+          console.log('加入房间:' + res)
+          if (res.data.data.status === '200') {
+            console.log('加入房间成功！马上跳转。。。')
+            that.enterRoom(res.data.data)
+          }
+        }).catch(error => {
+          console.log('加入房间错误:' + error)
+        })
       }
     },
     computed: {

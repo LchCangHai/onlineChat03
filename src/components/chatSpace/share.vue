@@ -5,22 +5,26 @@
         <div class="info">
           <div class="reinfo">
             <div class="avatar">
-              <img src="../../assets/image/6.png">
+              <img :src="roomData.avatar">
             </div>
             <div class="briefIntro">
-              <div class="title">mennannvzhuang</div>
-              <div class="link">zheshiyigelianjgfgsgfdggfsgs</div>
+              <div class="title">{{roomData.name}}</div>
+              <div class="link">{{roomData.topic}}</div>
             </div>
           </div>
-          <div class="intro">zhelishijieshao这里是介绍zhelishijieshao这里是介绍zhelishijieshao这里是介绍</div>
+          <div class="intro">{{roomData.describe}}</div>
         </div>
         <div class="qshare">
           <div class="select">
-            <div class="item">
+            <div class="item"
+                 @click="shareInfo"
+            >
               <div>QQ</div>
               <span class="iconfont icon-icon_qq_fill"></span>
             </div>
-            <div class="item">
+            <div class="item"
+                 @click="shareInfo"
+            >
               <div>WeChat</div>
               <span class="iconfont icon-icon_wechat"></span>
             </div>
@@ -32,6 +36,50 @@
 </template>
 
 <script>
+export default {
+  data () {
+    return {
+      roomData: {
+        avatar: '',
+        name: '',
+        topic: '',
+        describe: '',
+        password: '',
+        memberNum: 1,
+        id: ''
+      }
+    }
+  },
+  methods: {
+    getRoomInfo () {
+      const that = this
+      console.log('getRoomInfo')
+      this.$axios.get('/api/v1/room/' + window.localStorage.getItem('currentRoom'))
+        .then(res => {
+          console.log(res)
+          that.roomData.avatar = res.data.data.avatar
+          that.roomData.name = res.data.data.name
+          that.roomData.topic = res.data.data.topic
+          that.roomData.describe = res.data.data.introduce
+          that.roomData.password = res.data.data.key
+          that.roomData.memberNum = res.data.data.count_user
+          that.roomData.id = res.data.data.id
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    shareInfo () {
+      const info = '分享这个房间\n房间名为：【' + this.roomData.name +
+        '】\nid为：【' + this.roomData.id + '】\n邀请码为：【' + this.roomData.password +
+        '】\n复制信息进行分享'
+      alert(info)
+    }
+  },
+  mounted () {
+    const that = this
+    that.getRoomInfo()
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -117,5 +165,12 @@
         color: #757f8a;
       }
     }
+  }
+  .item{
+    cursor: pointer;
+  }
+  .item:hover{
+    color:#0000ff;
+    background-color: rgba(250,251,255,0.78);
   }
 </style>

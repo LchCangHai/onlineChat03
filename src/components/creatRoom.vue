@@ -1,19 +1,17 @@
 <template>
   <div class="container">
+    <VueElementLoading
+      :active="this.$store.state.creatRoomActive"
+      spinner="ring"
+      color="gray"
+      is-full-screen="true"
+      background="#fafafa"
+    ></VueElementLoading>
     <vue-scroll>
       <div class="totle">
         <div class="title">
           Creat group
         </div>
-<!--        <div class="search">-->
-<!--          <div>-->
-<!--            <input class="search1"-->
-<!--                   placeholder="Search for messages or users..."-->
-<!--                    v-model="search"-->
-<!--            >-->
-<!--            <i class="el-icon-search"></i>-->
-<!--          </div>-->
-<!--        </div>-->
         <div class="creatForm">
           <div class="Photo item ">
             <input type="file"
@@ -92,6 +90,7 @@
 </template>
 
 <script>
+import VueElementLoading from 'vue-element-loading'
 document.body.ondrop = function (event) {
   event.preventDefault()
   event.stopPropagation()
@@ -147,21 +146,20 @@ export default {
     upLoad () {
       console.log('upload')
       const that = this
+      this.$store.commit('creatRoomLoading', true)
       this.$axios.post('/api/v1/rooms/', that.formdata,
         { headers: { 'Content-Type': 'multipart/form-data' } })
         .then(res => {
           console.log(res)
+          that.$store.commit('creatRoomLoading', false)
+          if (res.data.status === 200) {
+            that.$store.commit('creatRoomLoading', false)
+            alert('创建房间' + '【 ' + that.name + ' 】' + '成功，您可以通过' + that.password + '邀请他人加入')
+          }
         }).catch(error => {
           console.log(error)
-        })
-    },
-    getRoom () {
-      console.log('getroom')
-      this.$axios.get('/api/v1/room/222')
-        .then(res => {
-          console.log(res)
-        }).catch(error => {
-          console.log(error)
+          alert('创建失败')
+          that.$store.commit('creatRoomLoading', false)
         })
     }
   },
@@ -198,6 +196,9 @@ export default {
     password (val) {
       this.formdata.set('password', val)
     }
+  },
+  components: {
+    VueElementLoading
   }
 }
 </script>
@@ -339,5 +340,6 @@ export default {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    object-fit: cover;
   }
 </style>

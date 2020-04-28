@@ -1,7 +1,14 @@
 <template>
   <vue-scroll>
     <div class="container">
-      <div class="title1">Profile</div>
+      <div class="title1">
+        Profile
+        <div
+          class="btnFresh"
+          @click="getUsers">
+          <i class="el-icon-refresh"></i>
+        </div>
+      </div>
       <div class="search">
         <input
           class="inSearch"
@@ -133,6 +140,9 @@ export default {
     font-weight: bolder;
     align-self: flex-start;
     margin: 12px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
   .search{
     .tem;
@@ -225,6 +235,10 @@ export default {
       font-weight: 600;
       margin: 3px 0;
     }
+  }
+  .btnFresh{
+    margin-left: 5px;
+    cursor: pointer;
   }
   /*.info1{*/
   /*  display: flex;*/

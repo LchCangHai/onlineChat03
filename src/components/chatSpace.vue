@@ -4,11 +4,11 @@
       <div class="header">
         <div class="infoShow">
           <div class="avatar">
-            <img :src="avatarURL" />
+            <img :src="roomData.avatar" />
           </div>
           <div class="textInfo-h">
             <strong>{{roomData.name}}</strong>
-            <span>{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</span>
+            <span>{{roomData.memberNum + 'member(s)' + '-' + roomData.topic}}</span>
           </div>
         </div>
         <div class="headerSet">
@@ -35,7 +35,7 @@
           @click="scrollToDown"
         ></button>
         <button
-          @click="scrollToDown"
+          @click="getAllInfo()"
         >
           <i class="el-icon-bottom"></i>
           查看信息
@@ -54,104 +54,19 @@
         </div>
         <vue-scroll ref="vs">
           <div class="chatSpace">
-            <div class="myChat">
+            <div
+              v-for="item in allMessages"
+              :class="{ myChat: item.author.id.toString() === currentUser.toString(),
+                        otherChat: item.author.id.toString() !== currentUser.toString() }"
+              :key="item.id"
+            >
               <div class="chatText">
-                <div class="chatName">11mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
+                <div class="chatName">{{item.author.username}}</div>
+                {{item.content}}
+                <div class="chatTime">{{item.create_at}}</div>
               </div>
               <div class="chatAvatar">
-                <img src="../assets/image/vue.png" />
-              </div>
-            </div>
-            <div class="otherChat">
-              <div class="chatAvatar">
-                <img src="../assets/image/logo.png" />
-              </div>
-              <div class="chatText">
-                <div class="chatName">mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-            </div>
-            <div class="myChat">
-              <div class="chatText">
-                <div class="chatName">222mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-              <div class="chatAvatar">
-                <img src="../assets/image/vue.png" />
-              </div>
-            </div>
-            <div class="otherChat">
-              <div class="chatAvatar">
-                <img src="../assets/image/logo.png" />
-              </div>
-              <div class="chatText">
-                <div class="chatName">mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-            </div>
-            <div class="myChat">
-              <div class="chatText">
-                <div class="chatName">3333mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-              <div class="chatAvatar">
-                <img src="../assets/image/vue.png" />
-              </div>
-            </div>
-            <div class="otherChat">
-              <div class="chatAvatar">
-                <img src="../assets/image/logo.png" />
-              </div>
-              <div class="chatText">
-                <div class="chatName">mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-            </div>
-            <div class="myChat">
-              <div class="chatText">
-                <div class="chatName">4444mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-              <div class="chatAvatar">
-                <img src="../assets/image/vue.png" />
-              </div>
-            </div>
-            <div class="otherChat">
-              <div class="chatAvatar">
-                <img src="../assets/image/logo.png" />
-              </div>
-              <div class="chatText">
-                <div class="chatName">mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-            </div>
-            <div class="myChat">
-              <div class="chatText">
-                <div class="chatName">5555mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
-              </div>
-              <div class="chatAvatar">
-                <img src="../assets/image/vue.png" />
-              </div>
-            </div>
-            <div class="otherChat">
-              <div class="chatAvatar">
-                <img src="../assets/image/logo.png" />
-              </div>
-              <div class="chatText">
-                <div class="chatName">mennanzhizhu</div>
-                dsaghtrytjssaghtrytjhgfdsfgggggggggasaghtrytjhgfdsfgggggggggghtrytjhgfdsfgggggggggsaghtrytjhgfdsfggggggggghgfdsfgggggggggg"}}
-                <div class="chatTime">{{roomData.memberNum + 'member(s)' + '-' + roomData.info}}</div>
+                <img :src="item.author.avatar" />
               </div>
             </div>
           </div>
@@ -171,6 +86,7 @@
                   placeholder="Type your message..."
                   v-model="inText"
                   @click="hideAbsolute"
+                  @keyup.enter="submit"
         >
         </textarea>
       </div>
@@ -180,7 +96,10 @@
         >
         </span>
         <i class="el-icon-paperclip"></i>
-        <i class="icon3 el-icon-s-promotion"></i>
+        <i
+          class="icon3 el-icon-s-promotion"
+           @click="submit"
+        ></i>
       </div>
       </div>
     </div>
@@ -197,6 +116,7 @@
 
 <script>
 import VEmojiPicker from 'v-emoji-picker'
+import { mapState } from 'vuex'
 
 // const container = document.querySelector(' .body ')
 // container.scrollTop = container.scrollHeight
@@ -220,7 +140,6 @@ export default {
       isSetInfo: false,
       isSearching: false,
       isEmoji: false,
-      avatarURL: require('../assets/image/vue.png'),
       myText: ' ',
       searchText: '',
       inText: '',
@@ -228,14 +147,40 @@ export default {
         right: '260px'
       },
       roomData: {
-        name: 'mennan',
-        memberNum: 15,
-        info: 'mennannvzhuang'
+        avatar: '',
+        name: '',
+        topic: '',
+        describe: '',
+        password: '',
+        memberNum: 1
       },
       userData: {
         name: 'zhangsan'
-      }
+      },
+      allMessages: [],
+      currentUser: '',
+      userInfo: ''
     }
+  },
+  sockets: {
+    connect: function () {
+      console.log('socket connected')
+    },
+    customEmit: function (data) {
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+    },
+    new_message: function (data) {
+      alert('joinroom' + data)
+    },
+    join_room: function (data) {
+      console.log(data)
+    },
+    leave_room: function (data) {
+      console.log(data)
+    }
+  },
+  computed: {
+    ...mapState(['rooms'])
   },
   methods: {
     infoSet () {
@@ -302,6 +247,67 @@ export default {
         y: '100%'
       }
       this.$refs.vs.scrollTo(con, 500)
+    },
+    getRoomInfo () {
+      const that = this
+      console.log('getRoomInfo')
+      this.$axios.get('/api/v1/room/' + window.localStorage.getItem('currentRoom'))
+        .then(res => {
+          console.log(res)
+          that.roomData.avatar = res.data.data.avatar
+          that.roomData.name = res.data.data.name
+          that.roomData.topic = res.data.data.topic
+          that.roomData.describe = res.data.data.introduce
+          that.roomData.password = res.data.data.key
+          that.roomData.memberNum = res.data.data.count_user
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    getAllInfo () {
+      console.log('getAllInfo')
+      const that = this
+      this.$axios.get('/api/v1/messages/' + window.localStorage.getItem('currentRoom'))
+        .then(res => {
+          console.log('获取全部消息成功:' + res)
+          that.allMessages = res.data.data.messages
+          this.$refs.toDown.click()
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    submit () {
+      // this.$socket.emit('new message', 1)
+      const that = this
+      this.$axios.post('/api/v1/messages/' + window.localStorage.getItem('currentRoom'), {
+        type: 'text',
+        content: that.inText
+      })
+        .then(res => {
+          console.log(res)
+          that.inText = ''
+        }).catch(error => {
+          console.log(error)
+          that.inText = ''
+        })
+    },
+    getUserInfo () {
+      const that = this
+      this.$axios.get('/api/v1/user')
+        .then(res => {
+          console.log(res)
+          that.userInfo = res.data.data
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    joinRoom () {
+      const data = { id: '1', username: '2' }
+      data.id = window.localStorage.getItem('currentRoom')
+      data.username = this.userInfo.name
+      const d = JSON.stringify(data)
+      console.log('join_room')
+      this.$socket.emit('join_room', d)
     },
     createWs () {
       const that = this
@@ -389,8 +395,12 @@ export default {
   },
   mounted () {
     vm = this
+    vm.getRoomInfo()
+    this.joinRoom()
+    this.getAllInfo()
+    this.currentUser = window.localStorage.getItem('currentUser')
     // this.$emit('scrollToDown')
-    this.$refs.toDown.click()
+    // this.$refs.toDown.click()
     // this.createWs()
     let hash = '1'
     hash = window.location.hash
@@ -552,13 +562,14 @@ export default {
    /*background-color: skyblue;*/
   position: relative;
   display: flex;
-  flex-flow: column-reverse nowrap;
+  flex-flow: column nowrap;
   align-items: flex-start;
   /*position: absolute;*/
   bottom: 0px;
 }
 .chatText {
   background-color: #f5f6fa;
+  /*font-size: 15px;*/
 }
 .chatAvatar {
   height: 45px;
@@ -578,7 +589,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  justify-content: flex-start;
+  justify-content: flex-end;
   position: relative;
   right: 5px;
   word-break: break-all;
@@ -600,13 +611,13 @@ export default {
     text-align: left;
     font-size: 15px;
     .chatName {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 600;
       padding-bottom: 8px;
       color: #fff;
     }
     .chatTime {
-      font-size: 12px;
+      font-size: 10px;
       color: #8dc1ff;
       padding-top: 8px;
     }
@@ -614,9 +625,9 @@ export default {
 }
 .otherChat {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-items: flex-end;
-  justify-content: flex-start;
+  justify-content: flex-end;
   position: relative;
   right: 5px;
   word-break: break-all;
@@ -637,13 +648,13 @@ export default {
     text-align: left;
     font-size: 15px;
     .chatName {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 600;
       padding-bottom: 8px;
       color: #575b68;
     }
     .chatTime {
-      font-size: 12px;
+      font-size: 10px;
       color: #bcbdc5;
       padding-top: 8px;
     }
