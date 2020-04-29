@@ -28,6 +28,13 @@
         </div>
       </div>
       <div class="body" @click="hideAbsolute">
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          @click="submit1"-->
+<!--        >submit1</el-button>-->
+<!--        <el-button-->
+<!--          @click="joinRoom"-->
+<!--        >joinRoom</el-button>-->
         <button
           type="button"
           class="scrollToDown"
@@ -90,6 +97,8 @@
         >
         </span>
 <!--        <i class="el-icon-paperclip"></i>-->
+        <i class="icon2 el-icon-arrow-down" @click="scrollToDown"></i>
+
         <i
           class="icon3 el-icon-s-promotion"
            @click="submit"
@@ -153,19 +162,23 @@ export default {
   },
   sockets: {
     connect: function () {
-      console.log('socket connected')
+      console.log('socket connected,心跳包在这？')
     },
     customEmit: function (data) {
       console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
     },
     new_message: function (data) {
-      alert('joinroom' + data)
+      console.log('joinroom' + data)
     },
     join_room: function (data) {
-      alert(data)
+      console.log('join_room')
+      // alert(data)
     },
     leave_room: function (data) {
-      alert(data)
+      console.log(data)
+    },
+    get: function (data) {
+      console.log(data)
     }
   },
   computed: {
@@ -260,17 +273,25 @@ export default {
     submit () {
       // this.$socket.emit('new message', 1)
       const that = this
+      this.$socket.emit('new_message', that.inText)
       this.$axios.post('/api/v1/messages/' + window.localStorage.getItem('currentRoom'), {
         type: 'text',
         content: that.inText
       })
         .then(res => {
           console.log(res)
+          this.$socket.emit('new_message', res.data.data.id)
           that.inText = ''
         }).catch(error => {
           console.log(error)
           that.inText = ''
         })
+    },
+    submit1 () {
+      console.log('实验用')
+      const num = 1
+      this.$socket.emit('new_message', num)
+      console.log('实验用1234567890')
     },
     getUserInfo () {
       const that = this
@@ -286,9 +307,9 @@ export default {
       const data = { id: '1', username: '2' }
       data.id = window.localStorage.getItem('currentRoom')
       data.username = this.userInfo.name
-      const d = JSON.stringify(data)
+      // const d = JSON.stringify(data)
       console.log('join_room')
-      this.$socket.emit('join_room', d)
+      this.$socket.emit('join_room', { id: 1, username: 'mingzi' })
     }
   },
   watch: {
@@ -601,7 +622,35 @@ export default {
     .icon3:hover{
       background-color: #308fff;
     }
+    .icon2{
+      background-color: #f5f6fa;
+      color:#0176ff;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: gray solid 1px;
+    }
+    .icon2:hover{
+      background-color: #edeceb;
+    }
   }
+}
+.toDown{
+  .tem;
+  cursor: pointer;
+  /*position: absolute;*/
+  bottom: 110px;
+  left:90px;
+  background-color: #0176ff;
+  color: white;
+  width:45px;
+  height: 45px;
+  border-radius: 50%;
+  i{
+    color: white;
+  }
+}
+.toDown:hover{
+  color:rgba(1,118,255,0.78);
 }
 .chatInput{
   width:70%;
