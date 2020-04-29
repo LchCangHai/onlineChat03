@@ -33,10 +33,8 @@
                   <img
                     class="obj"
                     id="obj"
-                    v-show="isUpload"
-                    :src="userAvatar"
+                    :src="userInfo.userAvatar"
                   />
-<!--                  <span class="iconfont icon-photo2" v-show="!isUpload"></span>-->
                 </div>
                 <div class="tip1" @click="clickUpload">
                   You can upload jig, gif or png files. Max file size 3mb.
@@ -49,7 +47,7 @@
                 <input
                   class="inputName inForm"
                   placeholder="Type your name"
-                  v-model="name"
+                  v-model="userInfo.name"
                 />
               </div>
             </div>
@@ -59,7 +57,7 @@
                 <input
                   class="inputPhone inForm"
                   placeholder="(123)456-7890"
-                  v-model="phone"
+                  v-model="userInfo.phone"
                 />
               </div>
             </div>
@@ -69,7 +67,7 @@
                 <input
                   class="inputEmail inForm"
                   placeholder="you@yoursite.com"
-                  v-model="email"
+                  v-model="userInfo.email"
                 />
               </div>
             </div>
@@ -78,8 +76,8 @@
               <div class="formElement">
                 <input
                   class="inputEmail inForm"
-                  placeholder="you@yoursite.com"
-                  v-model="country"
+                  placeholder="Your country"
+                  v-model="userInfo.country"
                 />
               </div>
             </div>
@@ -88,8 +86,8 @@
               <div class="formElement">
                 <input
                   class="inputEmail inForm"
-                  placeholder="you@yoursite.com"
-                  v-model="area"
+                  placeholder="Your area"
+                  v-model="userInfo.area"
                 />
               </div>
             </div>
@@ -120,14 +118,16 @@ export default {
       formdata: tformdata,
       borderhover: false,
       isUpload: true,
-      userAvatar: '',
-      file: '',
-      name: '',
-      phone: '',
-      email: '',
-      country: '',
-      area: '',
-      userData: ''
+      userInfo: {
+        userAvatar: '',
+        name: '',
+        phone: '',
+        email: '',
+        country: '',
+        area: ''
+      },
+      userData: '',
+      file: ''
     }
   },
   methods: {
@@ -165,22 +165,27 @@ export default {
       this.uploadFile(files)
     },
     getUser () {
-      const that = this
-      console.log('getuser')
-      this.$axios
-        .get('/api/v1/user')
-        .then(res => {
-          console.log(res.data)
-          that.userAvatar = res.data.data.avatar + '?t=' + Math.random()
-          that.name = res.data.data.username
-          that.phone = res.data.data.phone
-          that.email = res.data.data.email
-          that.country = res.data.data.country
-          that.area = res.data.data.area
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      console.log('getuser111111111111111')
+      this.userInfo.userAvatar = this.currentUserInfo.avatar
+      this.userInfo.name = this.currentUserInfo.username
+      this.userInfo.phone = this.currentUserInfo.phone
+      this.userInfo.email = this.currentUserInfo.email
+      this.userInfo.country = this.currentUserInfo.country
+      this.userInfo.area = this.currentUserInfo.area
+      // this.$axios
+      //   .get('/api/v1/user')
+      //   .then(res => {
+      //     console.log(res.data)
+      //     that.userInfo.userAvatar = this.currentUserInfo.avatar
+      //     that.userInfo.name = this.currentUserInfo.username
+      //     that.userInfo.phone = this.currentUserInfo.phone
+      //     that.userInfo.email = this.currentUserInfo.email
+      //     that.userInfo.country = this.currentUserInfo.country
+      //     that.userInfo.area = this.currentUserInfo.area
+      //   })
+      //   .catch(error => {
+      //     console.log(error)
+      //   })
     },
     modifyUser () {
       const that = this
@@ -216,14 +221,14 @@ export default {
       console.log('submitModifyUser')
       this.modifyUser()
       this.modifyUserAvatar()
+      this.$store.dispatch('getUserInfo')
     }
   },
   computed: {
-    ...mapState(['currentRoomID', 'rooms'])
+    ...mapState(['currentRoomInfo', 'rooms', 'currentUserInfo'])
   },
   mounted: function () {
     const that = this
-    that.getUser()
     const dropbox = document.getElementById('drag_box')
     dropbox.addEventListener('drop', this.enentDrop, false)
     dropbox.addEventListener('dragleave', function (e) {
@@ -243,21 +248,16 @@ export default {
     })
   },
   watch: {
-    name (val) {
-      this.formdata.set('username', val)
-    },
-    phone (val) {
-      this.formdata.set('phone', val)
-    },
-    email (val) {
-      this.formdata.set('email', val)
-    },
-    country (val) {
-      this.formdata.set('country', val)
-    },
-    area (val) {
-      this.formdata.set('area', val)
+    userInfo (val) {
+      this.formdata.set('username', val.name)
+      this.formdata.set('phone', val.phone)
+      this.formdata.set('email', val.email)
+      this.formdata.set('country', val.country)
+      this.formdata.set('area', val.area)
     }
+  },
+  created () {
+    this.getUser()
   }
 }
 </script>

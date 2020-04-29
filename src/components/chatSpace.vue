@@ -34,12 +34,6 @@
           ref="toDown"
           @click="scrollToDown"
         ></button>
-        <button
-          @click="getAllInfo()"
-        >
-          <i class="el-icon-bottom"></i>
-          查看信息
-        </button>
         <div
           class="searchPane"
           v-show="isSearching"
@@ -95,7 +89,7 @@
               @click="chemoji"
         >
         </span>
-        <i class="el-icon-paperclip"></i>
+<!--        <i class="el-icon-paperclip"></i>-->
         <i
           class="icon3 el-icon-s-promotion"
            @click="submit"
@@ -116,12 +110,8 @@
 
 <script>
 import VEmojiPicker from 'v-emoji-picker'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-// const container = document.querySelector(' .body ')
-// container.scrollTop = container.scrollHeight
-// import packData from 'v-emoji-picker/data/emojis.json'
-const wsURL = 'wss://echo.websocket.org'
 let vm
 export default {
   data () {
@@ -157,7 +147,6 @@ export default {
       userData: {
         name: 'zhangsan'
       },
-      allMessages: [],
       currentUser: '',
       userInfo: ''
     }
@@ -173,16 +162,17 @@ export default {
       alert('joinroom' + data)
     },
     join_room: function (data) {
-      console.log(data)
+      alert(data)
     },
     leave_room: function (data) {
-      console.log(data)
+      alert(data)
     }
   },
   computed: {
-    ...mapState(['rooms'])
+    ...mapState(['rooms', 'allMessages'])
   },
   methods: {
+    ...mapActions(['getAllMessages']),
     infoSet () {
       this.isSetInfo = !this.isSetInfo
     },
@@ -226,11 +216,14 @@ export default {
     },
     selectEmoji (emoji) {
       // console.log(emoji)
-      console.log(emoji.data)
+      // console.log(emoji.data)
       this.inText = this.inText + emoji.data
       // let test = ' '
       // test = JSON.stringify(this.inText)
       // console.log(test)
+    },
+    try012 () {
+      this.$store.dispatch('getAllMessages')
     },
     // scrollToBottom () {
     //   this.$nextTick(() => {
@@ -260,18 +253,6 @@ export default {
           that.roomData.describe = res.data.data.introduce
           that.roomData.password = res.data.data.key
           that.roomData.memberNum = res.data.data.count_user
-        }).catch(error => {
-          console.log(error)
-        })
-    },
-    getAllInfo () {
-      console.log('getAllInfo')
-      const that = this
-      this.$axios.get('/api/v1/messages/' + window.localStorage.getItem('currentRoom'))
-        .then(res => {
-          console.log('获取全部消息成功:' + res)
-          that.allMessages = res.data.data.messages
-          this.$refs.toDown.click()
         }).catch(error => {
           console.log(error)
         })
@@ -308,73 +289,6 @@ export default {
       const d = JSON.stringify(data)
       console.log('join_room')
       this.$socket.emit('join_room', d)
-    },
-    createWs () {
-      const that = this
-      try {
-        that.wsParams.ws = new WebSocket(wsURL)
-        console.log('create ws success')
-        that.initWS()
-      } catch (e) {
-        console.log('catchErrorInCreateWebScoket:')
-        console.log(e)
-        that.reconnect(wsURL)
-      }
-    },
-    initWS () {
-      console.log('initWebScoket')
-      this.wsParams.ws.onclose = this.wsClose
-      this.wsParams.ws.onerror = this.wsError
-      this.wsParams.ws.onopen = this.wsOpen
-      this.wsParams.ws.onmessage = this.wsMessage
-    },
-    reconnect (url) {
-      const that = this
-      if (that.wsParams.lockReconnect) {
-        return
-      }
-      that.wsParams.lockReconnect = true
-      that.wsParams.tt && clearTimeout(that.wsParams.tt)
-      that.wsParams.tt = setTimeout(function () {
-        that.createWs(url)
-        that.wsParams.lockReconnect = false
-      }, 5000)
-      // console.log(2)
-    },
-    wsClose (e) {
-      console.log('断开连接', e)
-    },
-    wsError () {
-      console.log('ws出现错误')
-      this.initWS()
-    },
-    wsOpen () {
-      this.start()
-      let actions = { test: '12345' }
-      actions = { test: '123456' }
-      this.wsSend(JSON.stringify(actions))
-    },
-    wsMessage (e) {
-      this.start()
-      console.log(e)
-    },
-    wsSend (Data) {
-      this.wsParams.ws.send(Data)
-    },
-    start () {
-      console.log('心跳包开始啦')
-      const that = this
-      this.heartCheck.timeOutObj && clearTimeout(this.heartCheck.timeOutObj)
-      this.heartCheck.serverTimeOutObj && clearTimeout(this.heartCheck.serverTimeOutObj)
-      this.heartCheck.timeOutObj = setTimeout(function () {
-        // 发送心跳数据包
-        that.wsSend('12345')
-        that.heartCheck.serverTimeOutObj = setTimeout(function () {
-          console.log(111)
-          console.log(that.wsParams.ws)
-          that.wsClose()
-        }, that.heartCheck.timeOut)
-      }, that.heartCheck.timeOut)
     }
   },
   watch: {
@@ -395,13 +309,9 @@ export default {
   },
   mounted () {
     vm = this
-    vm.getRoomInfo()
     this.joinRoom()
-    this.getAllInfo()
+    this.getRoomInfo()
     this.currentUser = window.localStorage.getItem('currentUser')
-    // this.$emit('scrollToDown')
-    // this.$refs.toDown.click()
-    // this.createWs()
     let hash = '1'
     hash = window.location.hash
     if (hash === '#/home/chatSpace') {
@@ -409,6 +319,9 @@ export default {
     } else {
       vm.toggle = true
     }
+  },
+  created () {
+    this.$store.dispatch('getAllMessages')
   },
   components: {
     VEmojiPicker

@@ -194,7 +194,7 @@ export default {
       this.formdata.set('introduce', val)
     },
     password (val) {
-      this.formdata.set('password', val)
+      this.formdata.set('key', val)
     }
   },
   components: {

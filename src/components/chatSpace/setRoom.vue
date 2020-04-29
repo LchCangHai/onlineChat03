@@ -3,11 +3,11 @@
     <vue-scroll>
       <div class="showInfo">
         <div class="avatar">
-          <img :src="avatar">
+          <img :src="roomInfo.avatar">
         </div>
         <div class="info">
-          <div class="name">{{name}}</div>
-          <div class="intro">{{describe}}</div>
+          <div class="name">{{roomInfo.sname}}</div>
+          <div class="intro">{{roomInfo.sdescribe}}</div>
         </div>
       </div>
       <div class="setInfo">
@@ -27,12 +27,8 @@
                    id="icon1">
                 <img class="obj"
                      id="obj"
-                     v-show="isUpload"
-                     :src="avatar"
+                     :src="roomInfo.avatar"
                 >
-                <span class="iconfont icon-photo2"
-                      v-show="!isUpload"
-                ></span>
               </div>
               <div class="tip1"
                    @click="clickUpload">
@@ -45,7 +41,7 @@
             <div class="formElement">
               <input class="inputName inForm"
                      placeholder="Group Name"
-                     v-model="name"
+                     v-model="roomInfo.name"
               /></div>
           </div>
           <div class="Topic item">
@@ -53,7 +49,7 @@
             <div class="formElement">
               <input class="inputTopic inForm"
                      placeholder="Group Topic"
-                     v-model="topic"
+                     v-model="roomInfo.topic"
               /></div>
           </div>
           <div class="Describe item">
@@ -61,7 +57,7 @@
             <div class="formElement">
               <textarea class="inputDescribe inForm"
                      placeholder="Group Describe"
-                     v-model="describe"
+                     v-model="roomInfo.describe"
               /></div>
           </div>
           <div class="Password item">
@@ -69,7 +65,7 @@
             <div class="formElement">
               <input class="inputPassword inForm"
                      placeholder="Group Password"
-                     v-model="password"
+                     v-model="roomInfo.password"
               /></div>
           </div>
           <div class="item">
@@ -94,6 +90,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 document.body.ondrop = function (event) {
   event.preventDefault()
   event.stopPropagation()
@@ -107,14 +104,18 @@ export default {
       borderhover: false,
       isUpload: false,
       isMaster: true,
-      avatar: '',
+      roomInfo: {
+        avatar: '',
+        name: '',
+        sname: '',
+        topic: '',
+        describe: '',
+        sdescribe: '',
+        password: '',
+        master_id: ''
+      },
       search: '',
-      file: '',
-      name: '',
-      topic: '',
-      describe: '',
-      password: '',
-      master_id: ''
+      file: ''
     }
   },
   methods: {
@@ -151,28 +152,24 @@ export default {
       this.uploadFile(files)
     },
     getRoomInfo () {
-      const that = this
       console.log('getRoomInfo')
-      this.$axios.get('/api/v1/room/' + window.localStorage.getItem('currentRoom'))
-        .then(res => {
-          console.log(res)
-          that.avatar = res.data.data.avatar
-          that.name = res.data.data.name
-          that.topic = res.data.data.topic
-          that.describe = res.data.data.introduce
-          that.password = res.data.data.key
-          that.master_id = res.data.data.master_id
-          if (that.master_id.toString() !== window.localStorage.getItem('currentUser').toString()) {
-            // alert(that.master_id + window.localStorage.getItem('currentUser'))
-            console.log('不是群主，不能修改信息')
-            that.isMaster = true
-          } else {
-            console.log('是群主，能修改信息')
-            that.isMaster = false
-          }
-        }).catch(error => {
-          console.log(error)
-        })
+      this.roomInfo.avatar = this.currentRoomInfo.avatar
+      this.roomInfo.name = this.currentRoomInfo.name
+      this.roomInfo.sname = this.currentRoomInfo.name
+      this.roomInfo.topic = this.currentRoomInfo.topic
+      this.roomInfo.describe = this.currentRoomInfo.introduce
+      this.roomInfo.sdescribe = this.currentRoomInfo.introduce
+      this.roomInfo.password = this.currentRoomInfo.key
+      this.roomInfo.master_id = this.currentRoomInfo.master_id
+    },
+    judgeMaster () {
+      if (this.roomInfo.master_id.toString() !== window.localStorage.getItem('currentUser').toString()) {
+        console.log('不是群主，不能修改信息')
+        this.isMaster = true
+      } else {
+        console.log('是群主，能修改信息')
+        this.isMaster = false
+      }
     },
     modifyRoom () {
       const that = this
@@ -185,6 +182,18 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.$axios.get('/api/v1/room/' + window.localStorage.getItem('currentRoom'))
+            .then(res => {
+              that.roomInfo.name = res.data.data.name
+              that.roomInfo.sname = res.data.data.name
+              that.roomInfo.topic = res.data.data.topic
+              that.roomInfo.describe = res.data.data.introduce
+              that.roomInfo.sdescribe = res.data.data.introduce
+              that.roomInfo.password = res.data.data.key
+              that.$message('信息修改成功')
+            }).catch(error => {
+              console.log(error)
+            })
         }).catch(error => {
           console.log(error)
         })
@@ -200,19 +209,34 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.$axios.get('/api/v1/room/' + window.localStorage.getItem('currentRoom'))
+            .then(res => {
+              that.roomInfo.avatar = res.data.data.avatar
+              that.$message('头像修改成功')
+            }).catch(error => {
+              console.log(error)
+            })
         }).catch(error => {
           console.log(error)
         })
     },
     btnSubmit () {
+      const that = this
+      this.formdata.set('name', that.roomInfo.name)
+      this.formdata.set('topic', that.roomInfo.topic)
+      this.formdata.set('introduce', that.roomInfo.describe)
+      this.formdata.set('key', that.roomInfo.password)
       console.log('submitModifyRoom')
       this.modifyRoom()
       this.modifyRoomAvatar()
     }
   },
+  computed: {
+    ...mapState(['currentRoomInfo'])
+  },
   mounted: function () {
     const that = this
-    this.getRoomInfo()
+    this.formdata.set('file', null)
     const dropbox = document.getElementById('drag_box')
     dropbox.addEventListener('drop', this.enentDrop, false)
     dropbox.addEventListener('dragleave', function (e) {
@@ -231,19 +255,11 @@ export default {
       that.borderhover = true
     })
   },
+  created () {
+    this.getRoomInfo()
+    this.judgeMaster()
+  },
   watch: {
-    name (val) {
-      this.formdata.set('name', val)
-    },
-    topic (val) {
-      this.formdata.set('topic', val)
-    },
-    describe (val) {
-      this.formdata.set('introduce', val)
-    },
-    password (val) {
-      this.formdata.set('key', val)
-    }
   }
 }
 </script>

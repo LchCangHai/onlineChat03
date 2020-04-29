@@ -106,8 +106,8 @@ export default {
     height:250px;
     .reinfo{
       .tem;
-      flex-direction: row;
-      flex-wrap: wrap;
+      /*flex-direction: row;*/
+      flex-wrap: nowrap;
     }
   }
   .avatar{
@@ -128,6 +128,10 @@ export default {
     margin: 5px;
     /*max-width: 250px;*/
     word-break: break-all;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     .title{
       font-size: 15px;
     }

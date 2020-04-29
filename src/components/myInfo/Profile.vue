@@ -57,35 +57,7 @@ export default {
   data () {
     return {
       name: '',
-      datas: {
-        data: {
-          count: 1, // # 用户数据个数(即users中的用户个数)
-          kind: 'UserList', // # 资源类型
-          self: 'http://chatroom.mr-lin.site/api/v1/users/?room=1', // # 该资源请求链接
-          users: [ // # 用户信息
-            {
-              avatar: 'http://chatroom.mr-lin.site/avatars/user/25',
-              create_at: '2020-04-25 11:45:36.129983',
-              id: 25,
-              kind: 'user_all',
-              self: 'http://chatroom.mr-lin.site/api/v1/user/',
-              update_at: '2020-04-25 11:45:36.129983',
-              username: '3927'
-            },
-            {
-              avatar: 'http://chatroom.mr-lin.site/avatars/user/9',
-              create_at: '2020-04-26 11:45:36.222222',
-              id: 25,
-              kind: 'User',
-              self: 'http://chatroom.mr-lin.site/api/v1/user/',
-              update_at: '2020-04-25 11:45:36.129983',
-              username: 'damennan'
-            }
-          ]
-        },
-        message: 'succeed',
-        status: 200
-      },
+      datas: {},
       datas1: '',
       searchContent: ''
     }
@@ -97,7 +69,7 @@ export default {
       console.log('getUsers')
       this.$axios.get('/api/v1/users', {
         params: {
-          room: that.currentRoomID.id
+          room: that.currentRoomInfo.id
         }
       })
         .then(res => {
@@ -114,7 +86,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentRoomID', 'rooms'])
+    ...mapState(['currentRoom', 'rooms', 'currentRoomInfo'])
   },
   mounted () {
     console.log('获取用户列表')

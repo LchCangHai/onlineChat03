@@ -36,8 +36,7 @@
             <div class="create contentItem"
                  v-show=" activeNum === 1 ? true : false"
             >
-              啊呀呀，聊天室里面有创建的功能，这里我就偷个懒吧<br>
-                        <el-button type="primary" @click="login">主要按钮</el-button>
+              <createComponent></createComponent>
             </div>
             <div class="join contentItem"
                  v-show=" activeNum === 2 ? true : false"
@@ -136,7 +135,7 @@ export default {
   }
   .el-header {
     .tem;
-    background-color: skyblue;
+    background-color: rgba(1,118,255,0.78);
     color: white;
     font-size: 25px;
     border-bottom: #edeef6 solid 2px;
@@ -160,7 +159,7 @@ export default {
     height:100%;
     background-color: #f5f6fa;
     padding-top:10px;
-    border:#f5f6fa solid 1px;
+    border:gray solid 1px;
   }
   .contentContainer{
     .tem;
@@ -173,6 +172,9 @@ export default {
       justify-content: center;
       align-items: center;
     }
+  }
+  .create{
+    width:100%;
   }
   .navItem{
     .tem;
@@ -240,12 +242,13 @@ export default {
   .item1{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     background-color: white;
     width: 90%;
     height: 55px;
     border-bottom: #f5f6fa solid 1px;
+    padding: 0 5px;
     button{
       border:none;
       background-color: skyblue;
@@ -271,7 +274,9 @@ export default {
     background-color: #edeef6;
   }
 </style>
+
 <script>
+  import createComponent from './components/creatRoom'
   let vm
   function getHash() {
     let hash
@@ -285,7 +290,7 @@ export default {
     data() {
       return {
         isHome: true,
-        activeNum: 2,
+        activeNum: 1,
         inviteCode: '',
         roomCode: '',
         tip1: '',
@@ -360,18 +365,21 @@ export default {
           }
         })
         .then(res => {
-          console.log('加入房间:' + res)
-          if (res.data.data.status === '200') {
-            console.log('加入房间成功！马上跳转。。。')
-            that.enterRoom(res.data.data)
-          }
+          console.log('加入房间:' + res.data.data.name)
+          console.log(res.data)
+          console.log('加入房间成功！马上跳转。。。')
+          that.enterRoom(res.data.data)
+
         }).catch(error => {
           console.log('加入房间错误:' + error)
         })
       }
     },
+    components: {
+      createComponent
+    },
     computed: {
-      ...mapState(['currentRoomID','rooms'])
+      ...mapState(['currentRoomID'])
     },
     watch: {
       // activeNum: {

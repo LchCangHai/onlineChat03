@@ -1,27 +1,29 @@
 <template>
   <div id="home">
     <el-container>
-      <el-aside width="70px">
+      <el-aside width="70px"
+                @click="btnSetOut"
+      >
         <div class="logo">
           <img src="../assets/image/logo.png" />
         </div>
         <div class="functions">
           <i
             class="el-icon-edit-outline"
-            :class="{active : activeItem === 1 ? true : false}"
+            :class="{active : (activeItem === 1 ? true : false)}"
             @click="toCreatRoom"
           ></i>
           <div>
             <i
               class="el-icon-chat-square"
-              :class="{active : activeItem === 2 ? true : false}"
+              :class="{active : (activeItem === 2 ? true : false)}"
               @click="toChatSpace"
             ></i>
             <span class="chatInfo blink">.</span>
           </div>
           <i
             class="el-icon-user"
-            :class="{active : activeItem == 3 ? true : false}"
+            :class="{active : (activeItem == 3 ? true : false)}"
             @click="toMyInfo"
           ></i>
         </div>
@@ -225,14 +227,18 @@ export default {
     mounted: function () {
       let hash = getHash()
       let that = this
-      if (hash == "#/creatRoom") {
+      if (hash == "#/home/creatRoom") {
         that.activeItem = 1
-      } else if (hash == "#/chatSpace") {
+      } else if (hash == "#/home/chatSpace/setRoom" || hash == "#/home/chatSpace/share") {
         that.activeItem = 2
-      } else if (hash == "#/Info") {
+      } else if (hash == "#/home/myInfo/Info") {
         that.activeItem = 3
       }
       vm = this
+    },
+    created () {
+      this.$store.dispatch('getRoomInfo')
+      this.$store.dispatch('getUserInfo')
     }
   }
 </script>
