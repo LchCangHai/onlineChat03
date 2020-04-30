@@ -44,10 +44,28 @@
         >
           <div class="searchContainer">
             <input class="searchInput"
-                   placeholder="Search this chat"
-                   v-model="searchText" />
-            <i class="el-icon-search"></i>
+                   placeholder="搜索（请至少输入3个字符）"
+                   v-model="searchText"
+                   @keyup.enter="btnSearch"
+            />
+            <i
+              class="el-icon-search"
+              @click="btnSearch"
+            ></i>
           </div>
+            <div
+              class="searchText"
+              v-show="isSResult"
+            >
+              <div
+                class="item2"
+                v-for="data in searchResult"
+                :key="data.id"
+              >
+                <div class="title2">{{data.author.username}}</div>
+                <div class="context">{{data.content}}</div>
+              </div>
+            </div>
         </div>
         <vue-scroll ref="vs">
           <div class="chatSpace">
@@ -137,6 +155,8 @@ export default {
       isEmoji: false,
       myText: ' ',
       searchText: '',
+      isSResult: true,
+      searchResult: '',
       inText: '',
       emojiRight: {
         right: '260px'
@@ -147,7 +167,8 @@ export default {
         topic: '',
         describe: '',
         password: '',
-        memberNum: 1
+        memberNum: 1,
+        id: ''
       },
       userData: {
         name: 'zhangsan'
@@ -186,6 +207,9 @@ export default {
     },
     searchBtn () {
       this.isSearching = !this.isSearching
+      if (this.isSearching === false) {
+        this.isSResult = false
+      }
     },
     invite () {
       this.toggle = true
@@ -230,9 +254,6 @@ export default {
       // test = JSON.stringify(this.inText)
       // console.log(test)
     },
-    try012 () {
-      this.$store.dispatch('getAllMessages')
-    },
     scrollToDown () {
       const con = {
         y: '100%'
@@ -251,6 +272,7 @@ export default {
           that.roomData.describe = res.data.data.introduce
           that.roomData.password = res.data.data.key
           that.roomData.memberNum = res.data.data.count_user
+          that.roomData.id = res.data.data.id
         }).catch(error => {
           console.log(error)
         })
@@ -277,17 +299,27 @@ export default {
           this.$message('发送失败！！')
         })
     },
-    submit1 () {
-      console.log('实验用')
-      const num = 1
-      this.$socket.emit('new_message', num)
-      console.log('实验用1234567890')
+    btnSearch () {
+      console.log('搜索聊天记录')
+      this.isSResult = true
+      const that = this
+      this.$axios.get('/api/v1/search', {
+        params: {
+          q: that.searchText,
+          rid: that.roomData.id
+        }
+      })
+        .then(res => {
+          console.log('搜索成功')
+          that.searchResult = res.data.data.messages
+        }).catch(error => {
+          console.log(error)
+        })
     },
     getUserInfo () {
       this.userInfo = this.$store.state.currentUserInfo
     },
     joinRoom () {
-      this.userInfo = this.$store.state.currentUserInfo
       console.log('join_room')
       let id1 = window.localStorage.getItem('currentRoom')
       let name1 = this.userInfo.username
@@ -441,7 +473,7 @@ export default {
 }
 .searchPane {
   position: absolute;
-  height: 60px;
+  /*height: 60px;*/
   // width: calc(100% - 75px);
   background-color: #fff;
   border-bottom: 0.5px solid #f5f6fa;
@@ -449,6 +481,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  /*max-height: 500px;*/
 }
 .searchContainer{
   .tem;
@@ -461,6 +498,7 @@ export default {
   // padding: 0 10px;
   background-color: #edeef6;
   /*color: #b6bac2;*/
+  margin:10px;
   i{
     cursor: pointer;
   }
@@ -474,6 +512,40 @@ export default {
     // padding: 0 10px;
     background-color: #edeef6;
     color: #757575;
+}
+.searchText{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  border: 0.5px solid #f5f6fa;
+  border-radius: 4px;
+  width: 85%;
+  padding: 3px 5px;
+  background-color: #edeef6;
+  margin:2px;
+  height: 300px;
+  overflow: scroll;
+  border-radius: 10px;
+}
+.item2{
+  height:50px;
+  /*background-color: white;*/
+  border-bottom: black solid 1px;
+  width:100%;
+  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  .title2{
+    font-size: 15px;
+    color:gray;
+  }
+  .context{
+    font-size: 14px;
+  }
 }
 .vue-scroll{
   height:100%;
