@@ -23,7 +23,7 @@
       </div>
       <div
         class="member"
-        v-for="data in datas.data.users"
+        v-for="data in datas"
         :key="data.id"
       >
         <div class="info">
@@ -59,7 +59,8 @@ export default {
       name: '',
       datas: {},
       datas1: '',
-      searchContent: ''
+      searchContent: '',
+      searchData: ''
     }
   },
   methods: {
@@ -74,7 +75,8 @@ export default {
       })
         .then(res => {
           console.log(res)
-          that.datas = res.data
+          that.datas = res.data.data.users
+          that.datas1 = res.data.data.users
           console.log('获取列表成功')
         }).catch(error => {
           console.log(error)
@@ -82,7 +84,21 @@ export default {
     },
     btnSearch () {
       const that = this
+      console.log(this.datas)
       console.log('搜索用户名：' + that.searchContent)
+      this.search()
+    },
+    search () {
+      const data = this.searchContent
+      if (data) {
+        this.searchData = this.datas.filter(function (product) {
+          return String(product.username).toLowerCase().indexOf(data) > -1
+        })
+        console.log('搜索成功')
+        this.datas = this.searchData
+      } else {
+        this.datas = this.datas1
+      }
     }
   },
   computed: {

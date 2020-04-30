@@ -29,18 +29,14 @@
       </div>
       <div class="body" @click="hideAbsolute">
 <!--        <el-button-->
-<!--          type="primary"-->
-<!--          @click="submit1"-->
-<!--        >submit1</el-button>-->
-<!--        <el-button-->
 <!--          @click="joinRoom"-->
 <!--        >joinRoom</el-button>-->
-        <button
-          type="button"
-          class="scrollToDown"
-          ref="toDown"
-          @click="scrollToDown"
-        ></button>
+<!--        <button-->
+<!--          type="button"-->
+<!--          class="scrollToDown"-->
+<!--          ref="toDown"-->
+<!--          @click="scrollToDown"-->
+<!--        ></button>-->
         <div
           class="searchPane"
           v-show="isSearching"
@@ -157,7 +153,7 @@ export default {
         name: 'zhangsan'
       },
       currentUser: '',
-      userInfo: ''
+      userInfo: {}
     }
   },
   sockets: {
@@ -171,14 +167,13 @@ export default {
       console.log('joinroom' + data)
     },
     join_room: function (data) {
-      console.log('join_room')
-      // alert(data)
+      this.$message('[' + data + ']加入房间')
     },
     leave_room: function (data) {
-      console.log(data)
+      this.$message('[' + data + ']离开房间')
     },
     get: function (data) {
-      console.log(data)
+      console.log('触发了socket事件:' + data)
     }
   },
   computed: {
@@ -238,17 +233,7 @@ export default {
     try012 () {
       this.$store.dispatch('getAllMessages')
     },
-    // scrollToBottom () {
-    //   this.$nextTick(() => {
-    //     const container = document.querySelector(' .body ')
-    //     container.scrollTop = container.scrollHeight
-    //   })
-    // },
     scrollToDown () {
-      // alert(1)
-      // const { scrollTop, scrollLeft } = this.$refs.vs.getPosition()
-      // console.loo(scrollTop, scrollLeft)
-      // console.log('scrolldown')
       const con = {
         y: '100%'
       }
@@ -273,6 +258,7 @@ export default {
     submit () {
       // this.$socket.emit('new message', 1)
       const that = this
+      const { v } = this.$refs.vs.getScrollProcess()
       this.$socket.emit('new_message', that.inText)
       this.$axios.post('/api/v1/messages/' + window.localStorage.getItem('currentRoom'), {
         type: 'text',
@@ -282,9 +268,13 @@ export default {
           console.log(res)
           this.$socket.emit('new_message', res.data.data.id)
           that.inText = ''
+          if (v >= 0.99) {
+            that.scrollToDown()
+          }
         }).catch(error => {
           console.log(error)
           that.inText = ''
+          this.$message('发送失败！！')
         })
     },
     submit1 () {
@@ -294,22 +284,19 @@ export default {
       console.log('实验用1234567890')
     },
     getUserInfo () {
-      const that = this
-      this.$axios.get('/api/v1/user')
-        .then(res => {
-          console.log(res)
-          that.userInfo = res.data.data
-        }).catch(error => {
-          console.log(error)
-        })
+      this.userInfo = this.$store.state.currentUserInfo
     },
     joinRoom () {
-      const data = { id: '1', username: '2' }
-      data.id = window.localStorage.getItem('currentRoom')
-      data.username = this.userInfo.name
-      // const d = JSON.stringify(data)
+      this.userInfo = this.$store.state.currentUserInfo
       console.log('join_room')
-      this.$socket.emit('join_room', { id: 1, username: 'mingzi' })
+      let id1 = window.localStorage.getItem('currentRoom')
+      let name1 = this.userInfo.username
+      id1 = parseInt(id1)
+      name1 = String(name1)
+      this.$socket.emit('join_room', {
+        id: id1,
+        username: name1
+      })
     }
   },
   watch: {
@@ -330,8 +317,9 @@ export default {
   },
   mounted () {
     vm = this
-    this.joinRoom()
     this.getRoomInfo()
+    this.getUserInfo()
+    this.joinRoom()
     this.currentUser = window.localStorage.getItem('currentUser')
     let hash = '1'
     hash = window.location.hash
@@ -624,10 +612,10 @@ export default {
     }
     .icon2{
       background-color: #f5f6fa;
-      color:#0176ff;
+      color:gray;
       border-radius: 50%;
       margin-right: 10px;
-      border: gray solid 1px;
+      border: #f5f6fa solid 1px;
     }
     .icon2:hover{
       background-color: #edeceb;

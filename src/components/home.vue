@@ -19,7 +19,10 @@
               :class="{active : (activeItem === 2 ? true : false)}"
               @click="toChatSpace"
             ></i>
-            <span class="chatInfo blink">.</span>
+            <span
+              class="chatInfo"
+              :class="{ blink: messageShow }"
+            >.</span>
           </div>
           <i
             class="el-icon-user"
@@ -161,7 +164,9 @@ export default {
     100% { opacity: 0; }
   }
 </style>
+
 <script>
+  import { mapState } from 'vuex'
   let vm
   function getHash() {
     let hash
@@ -206,6 +211,9 @@ export default {
         console.log("注销账号")
         this.$router.push({ path: '/' })
       }
+    },
+    computed: {
+      ...mapState(['messageShow'])
     },
     watch: {
       $route: {
