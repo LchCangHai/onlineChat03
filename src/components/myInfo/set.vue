@@ -190,6 +190,11 @@ export default {
     modifyUser () {
       const that = this
       console.log('modifyUser')
+      this.formdata.set('username', this.userInfo.name)
+      this.formdata.set('phone', this.userInfo.phone)
+      this.formdata.set('email', this.userInfo.email)
+      this.formdata.set('country', this.userInfo.country)
+      this.formdata.set('area', this.userInfo.area)
       this.$axios({
         method: 'put',
         url: '/api/v1/user',
