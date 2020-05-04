@@ -24,6 +24,10 @@
               <span>Delete</span>
               <i class="el-icon-delete"></i>
             </div>
+            <div class="dropdownMenu" @click="quit">
+              <span>quit</span>
+              <i class="el-icon-delete"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -38,7 +42,7 @@
 <!--          @click="scrollToDown"-->
 <!--        ></button>-->
         <div
-          class="searchPane"
+          cl1 ass="searchPane"
           v-show="isSearching"
           :style="{width: toggle == true ? 'calc(75% - 58px)' : 'calc(100% - 75px)'}"
         >
@@ -225,10 +229,30 @@ export default {
       delete this.emojiRight.right
     },
     Delete () {
-      this.toggle = true
-      this.isSetInfo = false
-      this.emojiRight.left = '70px'
-      delete this.emojiRight.right
+      // this.toggle = true
+      // this.isSetInfo = false
+      // this.emojiRight.left = '70px'
+      // delete this.emojiRight.right
+      this.$axios.delete('/api/v1/user')
+        .then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        }).finally(() => {
+          this.$router.push({ path: '/' })
+        })
+      this.$router.push({ path: '/' })
+    },
+    quit () {
+      let id1 = window.localStorage.getItem('currentRoom')
+      let name1 = this.userInfo.username
+      id1 = parseInt(id1)
+      name1 = String(name1)
+      this.$socket.emit('leave_room', {
+        id: id1,
+        username: name1
+      })
+      this.$router.push({ path: '/' })
     },
     hideAbsolute () {
       this.isSetInfo = false
@@ -345,6 +369,9 @@ export default {
         }
       },
       deep: true
+    },
+    allMessages (val) {
+      this.scrollToDown()
     }
   },
   mounted () {

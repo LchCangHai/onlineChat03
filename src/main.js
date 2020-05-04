@@ -11,7 +11,7 @@ import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
 
 Vue.prototype.$axios = axios
-axios.defaults.baseURL = 'http://chatroom.mr-lin.site'
+axios.defaults.baseURL = '/foo'
 // axios.defaults.withCredentials = true
 axios.interceptors.request.use(config => {
   config.headers.token = window.localStorage.getItem('token')

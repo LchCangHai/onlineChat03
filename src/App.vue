@@ -5,6 +5,8 @@
       <el-container>
         <el-header>
           <div class="title">在线匿名聊天室</div>
+<!--          <el-button @click="getUrl('room')">getUrl</el-button>-->
+<!--          <el-button @click="getUrl('key')">getUrl</el-button>-->
         </el-header>
         <el-main>
 <!--          Main-->
@@ -106,9 +108,9 @@ function getUrl (name) {
   const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
   const r = window.location.search.substr(1).match(reg)
   if (r != null) {
-    return decodeURIComponent(r[2])
+    console.log(decodeURIComponent(r[2]))
   }
-  return 'null'
+  console.log('null')
 }
 export default {
   name: 'app',
@@ -302,6 +304,14 @@ export default {
     },
     methods: {
       ...mapMutations(['setRoomID','setRooms']),
+      getUrl (name) {
+        const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+        const r = window.location.search.substr(1).match(reg)
+        if (r != null) {
+          return decodeURI(r[2])
+        }
+        return null
+      },
       tocreate() {
         // console.log(12)
         this.activeNum = 1
@@ -375,6 +385,38 @@ export default {
         }).catch(error => {
           console.log('加入房间错误:' + error)
         })
+      },
+      urlJudge () {
+        const name1 = this.getUrl('name')
+        const key1 = this.getUrl('key')
+        if(name1 === null && key1 === null) {
+          console.log('name1 === null && key1 === null')
+          return
+        } else if(name1 === null || key1 === null) {
+          console.log('name1 === null || key1 === null')
+          return
+        }
+        this.$axios({
+          method: 'put',
+          url: '/api/v1/user',
+          data: {
+            action: 'join',
+            key: key1,
+            name: name1
+          }
+        })
+          .then(res => {
+            window.localStorage.setItem('currentRoom', res.data.data.id)
+            this.$router.push({ path: '/home' })
+            // this.$message('已加入房间:' + res.data.data.name)
+            console.log('加入房间:' + res.data.data.name)
+            console.log(res.data)
+            console.log('加入房间成功！马上跳转。。。')
+            that.enterRoom(res.data.data)
+          }).catch(error => {
+          console.log('加入房间错误:' + error)
+          this.$message('加入房间失败,失败房间:' + name1)
+        })
       }
     },
     components: {
@@ -426,6 +468,7 @@ export default {
       let hash = getHash()
       if (hash == "#/") {
         that.isHome = true
+        this.urlJudge()
       } else {
         that.isHome = false
       }
